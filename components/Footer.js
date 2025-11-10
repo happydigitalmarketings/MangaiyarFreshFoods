@@ -35,27 +35,9 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Categories */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Categories</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/" className="text-gray-400 hover:text-white text-sm">
-                  Electronics
-                </Link>
-              </li>
-              <li>
-                <Link href="/" className="text-gray-400 hover:text-white text-sm">
-                  Fashion
-                </Link>
-              </li>
-              <li>
-                <Link href="/" className="text-gray-400 hover:text-white text-sm">
-                  Accessories
-                </Link>
-              </li>
-            </ul>
-          </div>
+
+
+          
 
           {/* Contact Info */}
           <div>
@@ -66,11 +48,32 @@ export default function Footer() {
               <li>Address: 123 Store Street, City, Country</li>
             </ul>
           </div>
+
+
+
+
+   <div>
+              <h3 className="text-lg font-semibold mb-4">Payment</h3>
+          <img src="/images/payment/visa.png" alt="Visa" className="h-8" />
+          <img src="/images/payment/mastercard.png" alt="Mastercard" className="h-8" />
+          <img src="/images/payment/razorpay.png" alt="Razorpay" className="h-8" />
+          <img src="/images/payment/upi.png" alt="UPI" className="h-8" />
+          <img src="/images/payment/netbanking.png" alt="Net Banking" className="h-8" />
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
-          <p>&copy; {new Date().getFullYear()} MyStore. All rights reserved.</p>
+
+
+
+
+
+
         </div>
+
+        {/* Payment Methods */}
+      <div className="border-t border-gray-800 mt-8 pt-8">
+     
+        <p className="text-center text-gray-400 text-sm">&copy; {new Date().getFullYear()} Minukki Sarees. All rights reserved.</p>
+      </div>
       </div>
     </footer>
   );

@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";  
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
@@ -18,8 +19,17 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-bold text-[#8B4513]">
-            SareeShop
+          <Link href="/" className="flex items-center">
+            <div className="relative w-32 h-12">
+              <Image 
+                src="/images/logo.jpg" 
+                alt="Minukki Sarees Logo" 
+                width={128}
+                height={48}
+                className="object-contain"
+                priority
+              />
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
