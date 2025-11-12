@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 
 export default function ProductEdit() {
@@ -10,6 +10,7 @@ export default function ProductEdit() {
   const [success, setSuccess] = useState('');
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
+  const urlInputRef = useRef(null);
 
   useEffect(() => {
     if (!id) return;
@@ -70,38 +71,50 @@ export default function ProductEdit() {
   async function handleFileUpload(files) {
     if (!files || files.length === 0) return;
     
+    console.log('Starting upload for', files.length, 'files');
     setUploading(true);
     setUploadError('');
     
     try {
       for (const file of files) {
+        console.log('Processing file:', file.name, 'Type:', file.type, 'Size:', file.size);
+        
         if (!file.type.startsWith('image/')) {
-          setUploadError('Please select only image files');
-          setUploading(false);
-          return;
+          throw new Error(`File "${file.name}" is not an image. Only image files are allowed.`);
         }
         
         const formData = new FormData();
         formData.append('file', file);
         
+        console.log('Sending to /api/upload...');
         const res = await fetch('/api/upload', {
           method: 'POST',
           body: formData,
         });
         
+        console.log('Response status:', res.status);
+        
         if (!res.ok) {
-          throw new Error('Upload failed');
+          const errorData = await res.json().catch(() => ({ message: 'Upload failed - no details' }));
+          throw new Error(errorData.error || errorData.message || `Upload failed with status ${res.status}`);
         }
         
         const result = await res.json();
+        console.log('✓ Upload successful:', result.url);
+        
         setData(prev => ({
           ...prev,
           images: [...(prev.images || []), result.url]
         }));
       }
-      setUploading(false);
+      
+      setUploadError('');
+      console.log('All uploads completed successfully');
     } catch (err) {
-      setUploadError(err.message || 'Failed to upload image');
+      const errorMsg = err.message || 'Failed to upload image';
+      console.error('Upload error:', errorMsg, err);
+      setUploadError(errorMsg);
+    } finally {
       setUploading(false);
     }
   }
@@ -252,26 +265,32 @@ export default function ProductEdit() {
 
               <div className="flex gap-2">
                 <input
+                  ref={urlInputRef}
                   type="url"
                   placeholder="Or paste image URL here"
                   className="flex-1 rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault();
-                      if (e.target.value.trim()) {
-                        setData({ ...data, images: [...(data.images || []), e.target.value] });
-                        e.target.value = '';
+                      const url = e.target.value.trim();
+                      if (url) {
+                        setData(prev => ({ ...prev, images: [...(prev.images || []), url] }));
+                        if (urlInputRef.current) {
+                          urlInputRef.current.value = '';
+                        }
                       }
                     }
                   }}
                 />
                 <button
                   type="button"
-                  onClick={(e) => {
-                    const input = e.currentTarget.previousElementSibling;
-                    if (input.value.trim()) {
-                      setData({ ...data, images: [...(data.images || []), input.value] });
-                      input.value = '';
+                  onClick={() => {
+                    const url = urlInputRef.current?.value.trim();
+                    if (url) {
+                      setData(prev => ({ ...prev, images: [...(prev.images || []), url] }));
+                      if (urlInputRef.current) {
+                        urlInputRef.current.value = '';
+                      }
                     }
                   }}
                   className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B4513]"
