@@ -15,17 +15,17 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
+    <header className="bg-grey shadow-sm sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <div className="relative w-32 h-12">
+            <div className="relative">
               <Image 
                 src="/images/logo.jpg" 
                 alt="Minukki Sarees Logo" 
-                width={128}
-                height={48}
+                width={210}
+                height={87}
                 className="object-contain"
                 priority
               />

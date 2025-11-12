@@ -12,6 +12,7 @@ body { @apply bg-gray-50 text-gray-800; }
   .hover:bg-primary-dark { @apply hover:bg-[#703810]; }
   .border-primary { @apply border-[#8B4513]; }
   .ring-primary { @apply ring-[#8B4513]; }
+  .bg-grey { @apply bg-[#fafafa]; }
   .btn-primary {
     @apply bg-[#8B4513] text-white hover:bg-[#703810] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B4513];
   }
