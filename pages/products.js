@@ -1,11 +1,25 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { CATEGORIES, nameFromSlug } from '../lib/categories';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 
 export default function Products({ products }) {
+  const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const categories = ['All', 'Silk', 'Cotton', 'Georgette', 'Traditional', 'Wedding', 'Festival'];
+  const categories = ['All', ...CATEGORIES.map(c => c.name)];
+
+  // if a category slug is provided as query param (e.g. /products?category=kasavu-sarees)
+  // pre-select the matching category name
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { category } = router.query;
+    if (category) {
+      const name = nameFromSlug(String(category));
+      if (name) setSelectedCategory(name);
+    }
+  }, [router.isReady, router.query]);
 
   const filteredProducts = selectedCategory === 'All' 
     ? products 

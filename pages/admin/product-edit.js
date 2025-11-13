@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
+import { CATEGORIES } from '../../lib/categories';
 
 export default function ProductEdit() {
   const router = useRouter();
   const { id } = router.query;
-  const [data, setData] = useState({ title: '', slug: '', description: '', price: 0, stock: 0, images: [] });
+  const [data, setData] = useState({ title: '', slug: '', description: '', price: 0, stock: 0, images: [], categories: [] });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -199,6 +200,68 @@ export default function ProductEdit() {
                 required
               />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-900 mb-3">Categories</label>
+            <div className="flex gap-2 flex-wrap mb-3">
+              {CATEGORIES.map((cat) => {
+                const active = data.categories && data.categories.includes(cat.name);
+                return (
+                  <button
+                    key={cat.slug}
+                    type="button"
+                    onClick={() => {
+                      setData(prev => {
+                        const list = new Set(prev.categories || []);
+                        if (list.has(cat.name)) list.delete(cat.name);
+                        else list.add(cat.name);
+                        return { ...prev, categories: Array.from(list) };
+                      });
+                    }}
+                    className={`px-3 py-1 rounded-full text-sm font-medium border ${active ? 'bg-[#8B4513] text-white border-[#8B4513]' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}>
+                    {cat.name}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex gap-2 items-center">
+              <input
+                type="text"
+                placeholder="Add custom category"
+                className="flex-1 rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const v = e.currentTarget.value.trim();
+                    if (v) {
+                      setData(prev => ({ ...prev, categories: Array.from(new Set([...(prev.categories || []), v])) }));
+                      e.currentTarget.value = '';
+                    }
+                  }
+                }}
+              />
+              <button
+                type="button"
+                onClick={(e) => {
+                  const input = e.currentTarget.previousElementSibling;
+                  if (!input) return;
+                  const v = input.value.trim();
+                  if (v) {
+                    setData(prev => ({ ...prev, categories: Array.from(new Set([...(prev.categories || []), v])) }));
+                    input.value = '';
+                  }
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              >
+                Add
+              </button>
+            </div>
+
+            {data.categories && data.categories.length > 0 && (
+              <p className="mt-2 text-sm text-gray-600">Selected: {data.categories.join(', ')}</p>
+            )}
           </div>
 
           <div>
