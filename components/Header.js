@@ -12,6 +12,31 @@ export default function Header() {
       const c = JSON.parse(localStorage.getItem('cart') || '[]');
       setCartCount(c.reduce((s,i) => s + i.qty, 0));
     } catch(e) {}
+    // update when other tabs/windows change localStorage
+    function onStorage(e){
+      if(e.key === 'cart'){
+        try{
+          const c = JSON.parse(e.newValue || '[]');
+          setCartCount(c.reduce((s,i) => s + i.qty, 0));
+        }catch(err){}
+      }
+    }
+
+    // custom event for same-tab updates
+    function onCartUpdated(){
+      try{
+        const c = JSON.parse(localStorage.getItem('cart') || '[]');
+        setCartCount(c.reduce((s,i) => s + i.qty, 0));
+      }catch(err){}
+    }
+
+    window.addEventListener('storage', onStorage);
+    window.addEventListener('cartUpdated', onCartUpdated);
+
+    return () => {
+      window.removeEventListener('storage', onStorage);
+      window.removeEventListener('cartUpdated', onCartUpdated);
+    };
   }, []);
 
   return (
