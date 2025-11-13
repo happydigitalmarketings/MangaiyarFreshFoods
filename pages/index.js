@@ -15,28 +15,8 @@ export default function Home({products}){
       </Head>
       
       <main className="flex-grow">
-        {/* Hero Section */}
-        <div className="relative h-[70vh] bg-[#8B4513]/5">
-          <div className="max-w-6xl mx-auto px-4 h-full flex items-center">
-            <div className="w-full md:w-1/2">
-              <h1 className="text-4xl md:text-6xl font-serif text-[#8B4513] mb-6">
-                Traditional Kerala
-                <br />
-                <span className="text-[#654321]">Elegance</span>
-              </h1>
-              <p className="text-lg text-[#5C4033] mb-8 max-w-md">
-                Discover our handpicked collection of authentic Kerala sarees,
-                where tradition meets contemporary elegance.
-              </p>
-              <Link 
-                href="/products" 
-                className="inline-block px-8 py-3 bg-[#8B4513] text-white rounded hover:bg-[#654321] transition-colors"
-              >
-                Explore Collection
-              </Link>
-            </div>
-          </div>
-        </div>
+        {/* Banner Slider with Integrated Hero Section */}
+        <Banner />
 
         {/* Categories Section */}
         <section className="py-16 bg-white">
