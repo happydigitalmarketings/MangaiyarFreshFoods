@@ -22,6 +22,10 @@ const BlogSchema = new mongoose.Schema({
   featuredImage: {
     type: String,
   },
+  published: {
+    type: Boolean,
+    default: false,
+  },
   excerpt: {
     type: String,
   },

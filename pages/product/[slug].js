@@ -73,7 +73,6 @@ export default function ProductPage({ product }) {
               <div className="flex items-baseline gap-4 mb-4">
                 {originalPrice && <div className="text-sm text-gray-400 line-through">₹{originalPrice}</div>}
                 <div className="text-2xl font-semibold text-[#8B4513]">₹{product.price} <span className="text-sm text-gray-500">/ piece</span></div>
-                <div className="text-3xl font-bold ml-4">Total: ₹{(product.price * qty).toFixed(0)}</div>
               </div>
 
               <p className="text-gray-700 mb-6 max-w-prose">{product.description}</p>

@@ -145,11 +145,11 @@ export default function AdminBlogs({ user }) {
                   <div className="px-4 py-4 sm:px-6">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
-                        {post.image && (
+                        {(post.featuredImage || post.image) && (
                           <div className="flex-shrink-0 h-16 w-16 mr-4">
                             <Image
                               className="h-16 w-16 rounded-lg object-cover"
-                              src={post.image}
+                              src={post.featuredImage || post.image}
                               alt={post.title}
                               width={64}
                               height={64}
@@ -160,19 +160,22 @@ export default function AdminBlogs({ user }) {
                           <p className="text-sm font-medium text-[#8B4513] truncate">
                             {post.title}
                           </p>
-                          <div className="mt-2 flex items-center text-sm text-gray-500">
-                            <p>By {post.author}</p>
+                          <div className="mt-2 flex items-center text-sm text-gray-500 gap-2">
+                            <p>By {typeof post.author === 'string' ? post.author : (post.author?.name || 'Unknown')}</p>
                             <span className="mx-2">•</span>
                             <p>{new Date(post.createdAt).toLocaleDateString()}</p>
+                            {post.publishedAt && (
+                              <>
+                                <span className="mx-2">•</span>
+                                <p className="text-sm text-green-600">Published {new Date(post.publishedAt).toLocaleDateString()}</p>
+                              </>
+                            )}
                           </div>
                         </div>
                       </div>
                       <div className="flex items-center space-x-4">
-                        <Link
-                          href={`/admin/blogs/${post.slug}`}
-                          className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium text-[#8B4513] hover:text-[#703810]"
-                        >
-                          Edit
+                        <Link href={`/admin/blogs/${post.slug || post._id}`} legacyBehavior>
+                          <a aria-label={`Edit ${post.title}`} className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-[#8B4513] text-white hover:bg-[#703810]">Edit</a>
                         </Link>
                         <button
                           onClick={() => togglePostStatus(post.slug, post.published)}

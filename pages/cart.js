@@ -29,7 +29,7 @@ export default function CartPage(){
             ) : (
               <div className="bg-white rounded-lg shadow overflow-hidden">
                 {/* Table Header */}
-                <div className="grid grid-cols-12 gap-4 bg-yellow-400 p-4 font-semibold text-gray-900">
+                <div className="grid grid-cols-12 gap-4 bg-yellow-400 p-4 font-semibold text-white">
                   <div className="col-span-1"></div>
                   <div className="col-span-5">Product</div>
                   <div className="col-span-2 text-center">Price</div>

@@ -31,7 +31,7 @@ export default function Blog({ posts }) {
                   <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
                     <Image
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      src={post.image}
+                      src={post.featuredImage || post.image}
                       alt={post.title}
                       width={600}
                       height={450}
@@ -54,7 +54,7 @@ export default function Blog({ posts }) {
                     </p>
                     <div className="mt-4 flex items-center justify-between">
                       <span className="text-sm font-medium text-[#8B4513]">
-                        By {post.author}
+                        By {typeof post.author === 'string' ? post.author : (post.author?.name || 'Unknown')}
                       </span>
                       <span className="inline-flex items-center text-sm font-medium text-[#8B4513] group-hover:translate-x-1 transition-transform duration-200">
                         Read More
