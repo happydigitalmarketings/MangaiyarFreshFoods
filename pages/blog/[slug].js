@@ -38,7 +38,11 @@ export default function BlogPostPage({ post }) {
     <div className="min-h-screen bg-white">
       <Head>
         <title>{post.title} | Minukki Blog</title>
-        <meta name="description" content={post.content.substring(0, 160)} />
+        {/* Strip basic paragraph tags for meta description */}
+        <meta
+          name="description"
+          content={(post.content || '').replace(/<\/p>\s*<p>/gi, '\n\n').replace(/<[^>]+>/g, '').substring(0, 160)}
+        />
       </Head>
 
       {/* Breadcrumb */}
@@ -102,11 +106,15 @@ export default function BlogPostPage({ post }) {
           )}
 
           <div className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-600 prose-a:text-[#8B4513] prose-a:no-underline hover:prose-a:text-[#703810]">
-            {post.content.split('\n\n').map((paragraph, index) => (
-              <p key={index} className="mb-6">
-                {paragraph}
-              </p>
-            ))}
+            {(() => {
+              const raw = post.content || '';
+              // Convert closing/opening p tags into paragraph breaks, then strip remaining tags
+              const normalized = raw.replace(/<\/p>\s*<p>/gi, '\n\n').replace(/<[^>]+>/g, '');
+              const paras = normalized.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+              return paras.map((paragraph, index) => (
+                <p key={index} className="mb-6">{paragraph}</p>
+              ));
+            })()}
           </div>
 
           {/* Share and Navigation */}

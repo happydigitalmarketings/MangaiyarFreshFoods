@@ -18,6 +18,8 @@ export default function BlogForm({ user, postId }) {
     published: false,
     slug: ''
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -43,6 +45,9 @@ export default function BlogForm({ user, postId }) {
         published: Boolean(data.publishedAt),
         slug: data.slug || ''
       });
+      if (data.featuredImage) {
+        setPreviewUrl(data.featuredImage);
+      }
     } catch (error) {
       console.error('Error fetching post:', error);
       setError('Failed to load post');
@@ -59,29 +64,51 @@ export default function BlogForm({ user, postId }) {
       const url = formData.slug ? `/api/blog/${encodeURIComponent(formData.slug)}` : '/api/blog';
       const method = postId ? 'PUT' : 'POST';
 
-      const postData = {
-        ...formData,
-        publishedAt: formData.published ? new Date().toISOString() : null
-      };
-      delete postData.published;
-      
-      const response = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(postData),
-      });
+      // If an image file is selected, send multipart/form-data so API can accept uploads
+      let response;
+      if (imageFile) {
+        const form = new FormData();
+        form.append('title', formData.title);
+        form.append('content', formData.content);
+        form.append('excerpt', formData.excerpt || '');
+        form.append('tags', (formData.tags || []).join(','));
+        form.append('slug', formData.slug || '');
+        if (formData.published) form.append('published', 'true');
+        form.append('image', imageFile);
+
+        response = await fetch(url, {
+          method,
+          body: form,
+        });
+      } else {
+        const postData = {
+          ...formData,
+          publishedAt: formData.published ? new Date().toISOString() : null
+        };
+        delete postData.published;
+        response = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(postData),
+        });
+      }
 
       if (response.ok) {
         setSuccess('Post saved successfully');
         if (!postId) {
           setFormData({
-            title: '',
-            content: '',
-            featuredImage: '',
-            excerpt: '',
-            tags: [],
-            published: false
+              title: '',
+              content: '',
+              featuredImage: '',
+              excerpt: '',
+              tags: [],
+              published: false
           });
+            if (previewUrl) {
+              try { URL.revokeObjectURL(previewUrl); } catch(e) {}
+              setPreviewUrl(null);
+            }
+            setImageFile(null);
         }
         router.push('/admin/blogs');
       } else {
@@ -165,16 +192,31 @@ export default function BlogForm({ user, postId }) {
 
             <div>
               <label htmlFor="featuredImage" className="block text-sm font-medium text-gray-700">
-                Featured Image URL
+                Featured Image
               </label>
               <input
-                type="url"
+                type="file"
                 id="featuredImage"
-                value={formData.featuredImage}
-                onChange={(e) => setFormData({ ...formData, featuredImage: e.target.value })}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  placeholder="https://example.com/image.jpg"
+                accept="image/*"
+                onChange={(e) => {
+                  const f = e.target.files?.[0] || null;
+                  setImageFile(f);
+                  if (f) {
+                    const url = URL.createObjectURL(f);
+                    setPreviewUrl(url);
+                  }
+                }}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
               />
+
+              {previewUrl && (
+                <div className="mt-3 flex items-center gap-3">
+                  <img src={previewUrl} alt="Preview" className="w-48 h-28 object-cover rounded-md border" />
+                  <div>
+                    <button type="button" onClick={() => { setImageFile(null); if (previewUrl && previewUrl.startsWith('blob:')) try { URL.revokeObjectURL(previewUrl); } catch(e) {}; setPreviewUrl(null); }} className="text-sm text-red-600">Remove</button>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div>

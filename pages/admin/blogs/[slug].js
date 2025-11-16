@@ -23,7 +23,7 @@ export async function getServerSideProps({ req }) {
     const cookies = req.headers.cookie || '';
     const token = cookies.split('token=')[1] ? cookies.split('token=')[1].split(';')[0] : null;
     const user = token ? await verifyToken(token) : null;
-    if (!user || !user.isAdmin) {
+    if (!user || user.role !== 'admin') {
       return {
         redirect: {
           destination: '/admin/login',
@@ -31,7 +31,14 @@ export async function getServerSideProps({ req }) {
         },
       };
     }
-    return { props: { user } };
+    // Return a JSON-serializable user object (avoid Mongoose document)
+    const safeUser = {
+      id: user._id ? String(user._id) : null,
+      name: typeof user.name === 'string' ? user.name : (user.name?.name || ''),
+      email: user.email || '',
+      role: user.role || '',
+    };
+    return { props: { user: safeUser } };
   } catch (err) {
     return {
       redirect: {

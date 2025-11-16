@@ -70,10 +70,7 @@ export default function Header() {
             </Link>
             <Link href="/contact" className="text-gray-600 hover:text-[#8B4513] transition-colors">
               Contact
-            </Link>
-            <Link href="/blog" className="text-gray-600 hover:text-[#8B4513] transition-colors">
-              Blog
-            </Link>
+            </Link>           
             <Link 
               href="/admin" 
               className="text-gray-600 hover:text-[#8B4513] transition-colors border-l pl-6"

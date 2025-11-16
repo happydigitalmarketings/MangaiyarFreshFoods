@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Blog({ posts }) {
+  const stripHtml = (html = '') => html.replace(/<[^>]+>/g, '');
   return (
     <div className="min-h-screen bg-white pt-4">
       <Head>
@@ -50,7 +51,7 @@ export default function Blog({ posts }) {
                       {post.title}
                     </h2>
                     <p className="mt-3 text-base text-gray-500 line-clamp-3">
-                      {post.content.substring(0, 150)}...
+                      {stripHtml(post.content).substring(0, 150)}...
                     </p>
                     <div className="mt-4 flex items-center justify-between">
                       <span className="text-sm font-medium text-[#8B4513]">
