@@ -65,7 +65,7 @@ export default function ContactPage() {
         <meta name="description" content="Get in touch with us" />
       </Head>
 
-      <main className="container mx-auto px-4 py-12 bg-[#FDF8F1]">
+      <main className="container-fluid mx-auto px-4 py-12 bg-[#FDF8F1]">
         <h1 className="text-4xl font-bold mb-12 text-center text-[#8B4513]">Contact Us</h1>
         
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
