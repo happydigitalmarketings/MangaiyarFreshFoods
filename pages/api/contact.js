@@ -1,37 +1,5 @@
 import connectDB from '../../lib/db';
-import mongoose from 'mongoose';
-
-// Create Contact schema
-const contactSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  subject: {
-    type: String,
-    required: true,
-  },
-  message: {
-    type: String,
-    required: true,
-  },
-  status: {
-    type: String,
-    enum: ['new', 'read', 'replied'],
-    default: 'new',
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
-// Create or get the Contact model
-const Contact = mongoose.models.Contact || mongoose.model('Contact', contactSchema);
+import Contact from '../../models/Contact';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {

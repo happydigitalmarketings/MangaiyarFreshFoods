@@ -60,19 +60,19 @@ export default function AdminOrders({ user }) {
         <title>Manage Orders | Minukki Admin</title>
       </Head>
 
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div className="space-y-4 sm:space-y-6">
         {/* Header */}
-        <div className="md:flex md:items-center md:justify-between mb-8">
-          <div className="flex-1 min-w-0">
-            <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-bold leading-7 text-gray-900">
               Orders
             </h2>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="mb-6 md:flex md:items-center md:space-x-4">
-          <div className="flex-1 mb-4 md:mb-0">
+        <div className="space-y-3 sm:space-y-0 sm:flex sm:items-end sm:gap-4">
+          <div className="flex-1 min-w-0">
             <div className="relative rounded-md shadow-sm">
               <input
                 type="text"
@@ -88,12 +88,12 @@ export default function AdminOrders({ user }) {
               </div>
             </div>
           </div>
-          <div className="flex space-x-2 overflow-x-auto pb-2">
+          <div className="flex gap-2 overflow-x-auto pb-2">
             {orderStatuses.map(status => (
               <button
                 key={status}
                 onClick={() => setFilter(status)}
-                className={`px-4 py-2 rounded-full text-sm font-medium ${
+                className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap ${
                   filter === status
                     ? 'bg-[#8B4513] text-white'
                     : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
@@ -117,77 +117,65 @@ export default function AdminOrders({ user }) {
             </div>
           </div>
         ) : (
-          <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredOrders.map(order => (
-                  <tr key={order._id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      #{(order._id || '').slice(-6).toUpperCase()}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
-                      <div className="font-medium">{(order.shippingAddress?.name || ((order.shippingAddress?.firstName || '') + ' ' + (order.shippingAddress?.lastName || '')).trim()) || 'N/A'}</div>
-                      <div className="text-xs text-gray-600 mt-1">
-                        <span className="font-semibold">Email:</span> {order.shippingAddress?.email || 'N/A'}
-                      </div>
-                      <div className="text-xs text-gray-600">
-                        <span className="font-semibold">Phone:</span> {order.shippingAddress?.phone || 'N/A'}
-                      </div>
-                      <div className="text-xs text-gray-600">
-                        <span className="font-semibold">Address:</span> {order.shippingAddress?.address || 'N/A'}
-                      </div>
-                      <div className="text-xs text-gray-600">
-                        <span className="font-semibold">City:</span> {order.shippingAddress?.city || 'N/A'} {order.shippingAddress?.state ? `(${order.shippingAddress.state})` : ''}
-                      </div>
-                      <div className="text-xs text-gray-600">
-                        <span className="font-semibold">PIN:</span> {order.shippingAddress?.pin || 'N/A'}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      ₹{(order.total || 0).toLocaleString('en-IN')}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        order.status === 'completed' ? 'bg-green-100 text-green-800' :
-                        order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                        order.status === 'processing' ? 'bg-blue-100 text-blue-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
-                        {order.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <select
-                        value={order.status || 'pending'}
-                        onChange={(e) => updateOrderStatus(order._id, e.target.value)}
-                        className="block w-full px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-[#8B4513] focus:border-[#8B4513]"
-                      >
-                        <option value="pending">Pending</option>
-                        <option value="processing">Processing</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                      </select>
-                    </td>
+          <div className="bg-white shadow overflow-hidden rounded-lg">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Order ID</th>
+                    <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                    <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Total</th>
+                    <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Status</th>
+                    <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredOrders.map(order => (
+                    <tr key={order._id} className="hover:bg-gray-50">
+                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
+                        #{(order._id || '').slice(-6).toUpperCase()}
+                      </td>
+                      <td className="hidden sm:table-cell px-6 py-4 text-sm text-gray-600">
+                        <div className="font-medium truncate">{(order.shippingAddress?.name || ((order.shippingAddress?.firstName || '') + ' ' + (order.shippingAddress?.lastName || '')).trim()) || 'N/A'}</div>
+                        <div className="text-xs text-gray-500 truncate">{order.shippingAddress?.email || 'N/A'}</div>
+                      </td>
+                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
+                        ₹{(order.total || 0).toLocaleString('en-IN')}
+                      </td>
+                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
+                        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          order.status === 'completed' ? 'bg-green-100 text-green-800' :
+                          order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                          order.status === 'processing' ? 'bg-blue-100 text-blue-800' :
+                          'bg-red-100 text-red-800'
+                        }`}>
+                          {order.status}
+                        </span>
+                      </td>
+                      <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-600">
+                        {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'}
+                      </td>
+                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm">
+                        <select
+                          value={order.status || 'pending'}
+                          onChange={(e) => updateOrderStatus(order._id, e.target.value)}
+                          className="block w-full px-2 py-1 text-xs border border-gray-300 rounded-md focus:ring-[#8B4513] focus:border-[#8B4513]"
+                        >
+                          <option value="pending">Pending</option>
+                          <option value="processing">Processing</option>
+                          <option value="completed">Completed</option>
+                          <option value="cancelled">Cancelled</option>
+                        </select>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
             {filteredOrders.length === 0 && (
-              <div className="text-center py-12">
+              <div className="text-center py-12 px-4">
                 <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                 </svg>

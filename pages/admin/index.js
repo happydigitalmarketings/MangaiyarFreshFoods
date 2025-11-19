@@ -20,23 +20,25 @@ export default function AdminIndex({ user, stats }) {
   return (
     <AdminLayout user={user}>
       <div className="space-y-6">
-        <h1 className="text-3xl font-serif text-[#8B4513]">Dashboard Overview</h1>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h1 className="text-2xl sm:text-3xl font-serif text-[#8B4513]">Dashboard Overview</h1>
+        </div>
         
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {[
             { label: 'Total Orders', value: safeStats.totalOrders, icon: 'shopping-bag' },
             { label: 'Products', value: safeStats.totalProducts, icon: 'box' },
             { label: 'Revenue', value: `₹${(safeStats.totalRevenue || 0).toLocaleString('en-IN')}`, icon: 'dollar-sign' },
             { label: 'Pending Orders', value: safeStats.pendingOrders, icon: 'clock' },
           ].map((stat, index) => (
-            <div key={index} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-              <div className="flex items-center">
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-600">{stat.label}</p>
-                  <p className="text-2xl font-semibold text-gray-900 mt-2">{stat.value}</p>
+            <div key={index} className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs sm:text-sm font-medium text-gray-600">{stat.label}</p>
+                  <p className="text-xl sm:text-2xl font-semibold text-gray-900 mt-2 truncate">{stat.value}</p>
                 </div>
-                <div className="w-12 h-12 bg-[#8B4513]/10 rounded-full flex items-center justify-center">
+                <div className="hidden sm:flex w-12 h-12 bg-[#8B4513]/10 rounded-full flex-shrink-0 items-center justify-center">
                   <svg xmlns="http://www.w3.org/2000/svg" 
                        className="h-6 w-6 text-[#8B4513]"
                        fill="none" 
@@ -51,36 +53,36 @@ export default function AdminIndex({ user, stats }) {
         </div>
 
         {/* Recent Orders */}
-        <div className="bg-white shadow-sm rounded-lg border border-gray-200">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">Recent Orders</h2>
+        <div className="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
+          <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+            <h2 className="text-base sm:text-lg font-medium text-gray-900">Recent Orders</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Order ID</th>
+                  <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Amount</th>
+                  <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Status</th>
+                  <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {safeStats.recentOrders && safeStats.recentOrders.length > 0 ? (
                   safeStats.recentOrders.map((order) => (
-                    <tr key={order._id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <tr key={order._id} className="hover:bg-gray-50">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
                         #{(order._id || '').slice(-6).toUpperCase()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                         {order?.shippingAddress?.name || 'N/A'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-600">
                         ₹{(order?.total || 0).toLocaleString('en-IN')}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                           order?.status === 'completed' ? 'bg-green-100 text-green-800' :
                           order?.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                           order?.status === 'processing' ? 'bg-blue-100 text-blue-800' :
@@ -89,14 +91,14 @@ export default function AdminIndex({ user, stats }) {
                           {order?.status || 'N/A'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                         {order?.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN') : 'N/A'}
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
+                    <td colSpan="5" className="px-4 py-8 text-center text-gray-500 text-sm">
                       No orders yet
                     </td>
                   </tr>
