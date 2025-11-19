@@ -71,12 +71,12 @@ export default function AdminOrders({ user }) {
         </div>
 
         {/* Filters */}
-        <div className="space-y-3 sm:space-y-0 sm:flex sm:items-end sm:gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-4">
           <div className="flex-1 min-w-0">
-            <div className="relative rounded-md shadow-sm">
+            <div className="relative rounded-md shadow-sm h-10">
               <input
                 type="text"
-                className="form-input block w-full pl-10 sm:text-sm border-gray-300 rounded-md focus:ring-[#8B4513] focus:border-[#8B4513]"
+                className="form-input block w-full pl-10 h-full sm:text-sm border border-gray-300 rounded-md focus:ring-[#8B4513] focus:border-[#8B4513]"
                 placeholder="Search by order ID or customer name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -88,12 +88,12 @@ export default function AdminOrders({ user }) {
               </div>
             </div>
           </div>
-          <div className="flex gap-2 overflow-x-auto pb-2">
+          <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
             {orderStatuses.map(status => (
               <button
                 key={status}
                 onClick={() => setFilter(status)}
-                className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap ${
+                className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap h-10 flex items-center ${
                   filter === status
                     ? 'bg-[#8B4513] text-white'
                     : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
