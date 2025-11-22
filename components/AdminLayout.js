@@ -6,6 +6,7 @@ import { useState } from 'react';
 export default function AdminLayout({ children, user }) {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   const menuItems = [
     { icon: 'grid', label: 'Dashboard', href: '/admin' },
@@ -15,7 +16,7 @@ export default function AdminLayout({ children, user }) {
     { icon: 'shopping-bag', label: 'Orders', href: '/admin/orders' },
     { icon: 'file-text', label: 'Blog Posts', href: '/admin/blogs' },
     { icon: 'mail', label: 'Contact Messages', href: '/admin/contacts' },
-    { icon: 'bar-chart-2', label: 'Sales Reports', href: '/admin/reports' },
+    { icon: 'bar-chart-2', label: 'Report', href: '/admin/reports' }   
   ];
 
   const handleNavClick = () => {
@@ -23,121 +24,149 @@ export default function AdminLayout({ children, user }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FDF8F1]">
-      {/* Top Navigation Bar */}
-      <nav className="bg-white shadow-sm sticky top-0 z-40">
-        <div className="px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Mobile menu button */}
+    <div className="min-h-screen flex bg-gray-50">
+      {/* Sidebar Overlay for Mobile */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 md:hidden z-30"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div
+        className={`${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } md:translate-x-0 fixed md:relative w-64 h-screen bg-white shadow-lg transition-transform duration-300 ease-in-out z-30 flex flex-col`}
+      >
+        {/* Logo */}
+        <div className="px-6 py-6 border-b border-gray-200">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-gradient-to-br from-[#8B4513] to-[#703810] rounded-lg flex items-center justify-center text-white font-bold text-lg">
+              M
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">Minukki</h1>
+              <p className="text-xs text-gray-500">Admin</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-2">
+          {menuItems.map((item) => {
+            const isActive = router.pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={handleNavClick}
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                  isActive
+                    ? 'bg-[#8B4513] text-white'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5 flex-shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d={getIconPath(item.icon)}
+                  />
+                </svg>
+                <span className="truncate">{item.label}</span>
+                {item.label === 'Orders' && (
+                  <span className="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    0
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </nav>     
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Top Header */}
+        <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+          <div className="md:hidden">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+              className="p-2 rounded-lg hover:bg-gray-100"
             >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                {sidebarOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                )}
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            
-            <div className="hidden lg:flex items-center">
-              {/* Logo/Brand - optional */}
-            </div>
-            
-            {/* Admin Profile */}
-            <div className="flex items-center gap-2 sm:gap-4">
-              <span className="hidden sm:inline text-sm text-gray-700">
-                Welcome, {typeof user?.name === 'string' ? user.name : (user?.name?.name || 'Admin')}
-              </span>
-              <button 
-                onClick={() => {
-                  document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
-                  router.push('/admin/login');
-                }}
-                className="text-sm text-gray-600 hover:text-gray-900 px-2 py-1 rounded hover:bg-gray-100"
+          </div>
+
+          <div className="flex-1" />
+
+          <div className="flex items-center gap-4">
+            {/* Notification Bell */}
+            <button className="p-2 rounded-full hover:bg-gray-100 relative">
+              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span className="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full"></span>
+            </button>
+
+            {/* User Profile with Dropdown */}
+            <div className="flex items-center gap-3 pl-4 border-l border-gray-200 relative">
+              <div className="text-right hidden sm:block">
+                <p className="text-sm font-medium text-gray-900">{typeof user?.name === 'string' ? user.name : (user?.name?.name || 'Admin')}</p>
+                <p className="text-xs text-gray-500">Administrator</p>
+              </div>
+              <button
+                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                className="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white font-semibold text-sm hover:shadow-lg transition"
               >
-                Sign out
+                {(typeof user?.name === 'string' ? user.name : (user?.name?.name || 'A')).charAt(0).toUpperCase()}
               </button>
+
+              {/* Dropdown Menu */}
+              {profileDropdownOpen && (
+                <div className="absolute right-0 top-16 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                  <div className="px-4 py-3 border-b border-gray-200">
+                    <p className="text-sm font-medium text-gray-900">{typeof user?.name === 'string' ? user.name : (user?.name?.name || 'Admin')}</p>
+                    <p className="text-xs text-gray-500">{user?.email || 'admin@minukki.com'}</p>
+                  </div>
+            
+                  <div className="border-t border-gray-200 py-2">
+                    <button
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
+                        router.push('/admin/login');
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        </div>
-      </nav>
+        </header>
 
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar - Mobile overlay */}
-        {sidebarOpen && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 lg:hidden z-30"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-
-        {/* Sidebar */}
-        <div
-          className={`${
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          } lg:translate-x-0 fixed lg:relative w-64 h-full bg-white shadow-sm border-r border-gray-200 transition-transform duration-300 ease-in-out z-30`}
-        >
-          <nav className="mt-5 px-2 space-y-1 overflow-y-auto h-full">
-            {menuItems.map((item) => {
-              const isActive = router.pathname === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={handleNavClick}
-                  className={`group flex items-center px-4 py-3 text-sm font-medium rounded-md transition-colors ${
-                    isActive
-                      ? 'bg-[#8B4513]/10 text-[#8B4513]'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-[#8B4513]'
-                  }`}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={`mr-3 h-5 w-5 flex-shrink-0 ${
-                      isActive ? 'text-[#8B4513]' : 'text-gray-500'
-                    }`}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d={getIconPath(item.icon)}
-                    />
-                  </svg>
-                  <span className="truncate">{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-
-        {/* Main Content */}
-        <div className="flex-1 overflow-auto">
-          <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        {/* Page Content */}
+        <main className="flex-1 overflow-auto">
+          <div className="px-6 py-8">
             {children}
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
@@ -160,7 +189,7 @@ function getIconPath(icon) {
     case 'mail':
       return 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z';
     case 'bar-chart-2':
-      return 'M18 20V10M12 20V4M6 20v-6';
+      return 'M18 20V10M12 20V4M6 20v-6';   
     default:
       return '';
   }
