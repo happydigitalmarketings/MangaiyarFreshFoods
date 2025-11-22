@@ -40,11 +40,14 @@ export default async function handler(req, res) {
 
     const file = files.file[0];
     const fileBuffer = fs.readFileSync(file.filepath);
+    
+    // Determine folder based on query parameter
+    const folder = req.query.type === 'banner' ? 'minikki/banners' : 'minikki/products';
 
     const result = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         {
-          folder: "minikki/products",
+          folder: folder,
           resource_type: "auto",
         },
         (error, result) => {

@@ -1,8 +1,49 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 
 export default function Banner() {
-  const slides = [
+  const [slides, setSlides] = useState([]);
+  const [index, setIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const timeoutRef = useRef(null);
+  const delay = 4000; // 4s
+
+  useEffect(() => {
+    fetchBanners();
+  }, []);
+
+  const fetchBanners = async () => {
+    try {
+      const res = await fetch('/api/banners', {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache',
+        }
+      });
+      if (!res.ok) throw new Error('Failed to fetch banners');
+      const data = await res.json();
+      
+      // Transform banner data to match slide format
+      const transformedSlides = data.map(banner => ({
+        image: banner.image,
+        titleTop: banner.title,
+        titleBottom: '',
+        description: banner.text,
+        cta: banner.cta || 'Shop Now',
+        href: banner.link || '/products',
+      }));
+      
+      setSlides(transformedSlides.length > 0 ? transformedSlides : getDefaultSlides());
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching banners:', error);
+      setSlides(getDefaultSlides());
+      setLoading(false);
+    }
+  };
+
+  const getDefaultSlides = () => [
     {
       image: '/images/banner-2.jpg',
       titleTop: 'Buy 2',
@@ -21,29 +62,18 @@ export default function Banner() {
       cta: 'Shop Handloom',
       href: '/products',
     }
-    // {
-    //   image: '/images/banner-3.jpg',
-    //   titleTop: 'Silk Kasavu',
-    //   titleBottom: 'Radiance',
-    //   description:
-    //     'Luxurious silk kasavu sarees with a luminous finish — perfect for celebrations and special moments.',
-    //   cta: 'Shop Silk',
-    //   href: '/products',
-    // },
   ];
 
-  const [index, setIndex] = useState(0);
-  const timeoutRef = useRef(null);
-  const delay = 4000; // 4s
-
   useEffect(() => {
+    if (slides.length === 0) return;
+    
     resetTimeout();
     timeoutRef.current = setTimeout(() => {
       setIndex((prev) => (prev + 1) % slides.length);
     }, delay);
     return () => resetTimeout();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [index]);
+  }, [index, slides.length]);
 
   function resetTimeout() {
     if (timeoutRef.current) {
@@ -53,6 +83,10 @@ export default function Banner() {
 
   function goTo(i) {
     setIndex(i % slides.length);
+  }
+
+  if (loading || slides.length === 0) {
+    return null;
   }
 
   return (

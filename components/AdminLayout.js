@@ -9,6 +9,7 @@ export default function AdminLayout({ children, user }) {
 
   const menuItems = [
     { icon: 'grid', label: 'Dashboard', href: '/admin' },
+    { icon: 'image', label: 'Banners', href: '/admin/banners' },
     { icon: 'box', label: 'Products', href: '/admin/products' },
     { icon: 'shopping-bag', label: 'Orders', href: '/admin/orders' },
     { icon: 'file-text', label: 'Blog Posts', href: '/admin/blogs' },
@@ -145,6 +146,8 @@ function getIconPath(icon) {
   switch (icon) {
     case 'grid':
       return 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z';
+    case 'image':
+      return 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z';
     case 'box':
       return 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4';
     case 'shopping-bag':
