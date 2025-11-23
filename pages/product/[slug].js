@@ -7,6 +7,7 @@ export default function ProductPage({ product }) {
 
     useEffect(() => {
       // Fetch other products for 'You might also like' section
+     if (!product?._id) return;
       fetch('/api/products')
         .then(r => r.json())
         .then(d => {
