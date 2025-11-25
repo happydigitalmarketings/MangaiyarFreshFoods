@@ -131,9 +131,7 @@ export default function ProductPage({ product }) {
                 </div>
                 {product.stock === 0 && (
                   <div className="mb-4">
-                    <span className="inline-block bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md">
-                      Out of Stock
-                    </span>
+                    <span className="text-red-600 text-base font-semibold">Out of Stock</span>
                   </div>
                 )}
 
