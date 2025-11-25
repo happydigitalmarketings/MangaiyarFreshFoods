@@ -28,7 +28,7 @@ export default function AdminIndex({ user, stats }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {[
             { label: 'Total Orders', value: safeStats.totalOrders, icon: 'shopping-bag' },
-            { label: 'Products', value: safeStats.totalProducts, icon: 'box' },
+            { label: 'Completed Orders', value: safeStats.totalProducts, icon: 'box' },
             { label: 'Revenue', value: `₹${(safeStats.totalRevenue || 0).toLocaleString('en-IN')}`, icon: 'dollar-sign' },
             { label: 'Pending Orders', value: safeStats.pendingOrders, icon: 'clock' },
           ].map((stat, index) => (
@@ -165,12 +165,8 @@ export async function getServerSideProps({ req }) {
         .lean(),
       Order.countDocuments({ status: 'pending' }),
       Order.aggregate([
-        {
-          $group: {
-            _id: null,
-            total: { $sum: '$total' }
-          }
-        }
+        { $match: { status: 'completed' } },
+        { $group: { _id: null, total: { $sum: '$total' } } }
       ]).then(result => result[0]?.total || 0)
     ]);
   } catch (error) {

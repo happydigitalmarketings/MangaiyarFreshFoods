@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-export default function AdminLayout({ children, user }) {
+export default function AdminLayout({ children, user, activeMenu }) {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -35,7 +35,7 @@ export default function AdminLayout({ children, user }) {
 
       {/* Sidebar */}
       <div
-        className={`${
+        className={`$${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } md:translate-x-0 fixed md:relative w-64 h-screen bg-white shadow-lg transition-transform duration-300 ease-in-out z-30 flex flex-col`}
       >
@@ -55,7 +55,7 @@ export default function AdminLayout({ children, user }) {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-2">
           {menuItems.map((item) => {
-            const isActive = router.pathname === item.href;
+            const isActive = (activeMenu && activeMenu === item.href) || router.pathname === item.href;
             return (
               <Link
                 key={item.href}

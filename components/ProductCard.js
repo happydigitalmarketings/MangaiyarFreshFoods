@@ -68,9 +68,9 @@ export default function ProductCard({product}) {
                 <span className="text-sm text-gray-500 line-through">₹{product.originalPrice.toLocaleString('en-IN')}</span>
               )}
             </div>
-            {product.stock < 5 && (
-              <span className="text-xs text-red-600 font-medium">Only {product.stock} left</span>
-            )}
+              {product.stock === 0 && (
+                <span className="text-xs text-red-600 font-medium">Out of Stock</span>
+              )}
           </div>
         </div>
       </div>

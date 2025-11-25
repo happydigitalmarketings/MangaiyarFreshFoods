@@ -53,7 +53,11 @@ export default function ProductPage({ product }) {
 
   function orderByWhatsApp(){
     const whatsappNumber = '917094824932';
-    const productMessage = `Hi! I'm interested in ordering:\n\n${product.title}\nPrice: ₹${product.price}\nQuantity: ${qty}\n\nTotal: ₹${(product.price * qty).toLocaleString('en-IN')}\n\nProduct Link: ${pageUrl}`;
+    let productMessage = `Hi! I'm interested in ordering:\n\n${product.title}\nPrice: ₹${product.price}\nQuantity: ${qty}`;
+    if (product.stock === 0) {
+      productMessage += `\nStatus: Out of Stock`;
+    }
+    productMessage += `\n\nTotal: ₹${(product.price * qty).toLocaleString('en-IN')}\n\nProduct Link: ${pageUrl}`;
     const encodedMessage = encodeURIComponent(productMessage);
     window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
   }
@@ -125,6 +129,13 @@ export default function ProductPage({ product }) {
                     <span className="text-4xl font-black text-[#8B4513]">₹{product.price.toLocaleString('en-IN')}</span>
                   </div>
                 </div>
+                {product.stock === 0 && (
+                  <div className="mb-4">
+                    <span className="inline-block bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md">
+                      Out of Stock
+                    </span>
+                  </div>
+                )}
 
                 {/* Badges Row */}
                 {product.mrp && product.price < product.mrp && (

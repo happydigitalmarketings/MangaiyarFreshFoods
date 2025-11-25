@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
+import AdminLayout from '../../components/AdminLayout';
 
 export default function ProductEdit() {
   const router = useRouter();
@@ -137,265 +138,286 @@ export default function ProductEdit() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto py-6 px-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">{id ? 'Edit' : 'Create'} Product</h1>
-        <p className="mt-2 text-sm text-gray-500">Use this form to {id ? 'update' : 'create'} a product. Changes will be saved to the database.</p>
-      </div>
+    <AdminLayout user={null} activeMenu="/admin/products">
+      <div className="mx-auto py-6 px-6">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">{id ? 'Edit' : 'Create'} Product</h1>
+          <p className="mt-2 text-sm text-gray-500">Use this form to {id ? 'update' : 'create'} a product. Changes will be saved to the database.</p>
+        </div>
 
-      <div className="bg-white shadow rounded-lg p-8">
-        {loading && (
-          <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
-            <div className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm text-[#8B4513]">
-              <svg className="animate-spin -ml-1 mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Loading product...
-            </div>
-          </div>
-        )}
-        {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-sm font-medium text-red-800">{error}</p>
-          </div>
-        )}
-        {success && (
-          <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-md">
-            <p className="text-sm font-medium text-green-800">{success}</p>
-          </div>
-        )}
-
-        <form onSubmit={submit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-900">Title</label>
-            <input
-              type="text"
-              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
-              value={data.title}
-              onChange={e => setData({ ...data, title: e.target.value })}
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-900">Slug</label>
-            <input
-              type="text"
-              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
-              value={data.slug}
-              onChange={e => setData({ ...data, slug: e.target.value })}
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-900">MRP Price</label>
-              <div className="mt-1 relative">
-                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">₹</span>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  className="block w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 pl-7 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
-                  value={data.mrp}
-                  onChange={e => setData({ ...data, mrp: Number(e.target.value) })}
-                  required
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-900">Offer Price</label>
-              <div className="mt-1 relative">
-                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">₹</span>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  className="block w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 pl-7 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
-                  value={data.price}
-                  onChange={e => setData({ ...data, price: Number(e.target.value) })}
-                  required
-                />
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-900 mb-3">Categories</label>
-            {categoriesLoading ? (
-              <div className="text-sm text-gray-600">Loading categories...</div>
-            ) : (
-              <>
-                <div className="flex gap-2 flex-wrap mb-3">
-                  {categories.map((cat) => {
-                    const active = data.categories && data.categories.includes(cat.name);
-                    return (
-                      <button
-                        key={cat._id}
-                        type="button"
-                        onClick={() => {
-                          setData(prev => {
-                            const list = new Set(prev.categories || []);
-                            if (list.has(cat.name)) list.delete(cat.name);
-                            else list.add(cat.name);
-                            return { ...prev, categories: Array.from(list) };
-                          });
-                        }}
-                        className={`px-3 py-1 rounded-full text-sm font-medium border ${active ? 'bg-[#8B4513] text-white border-[#8B4513]' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}>
-                        {cat.name}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {data.categories && data.categories.length > 0 && (
-                  <p className="mt-2 text-sm text-gray-600">Selected: {data.categories.join(', ')}</p>
-                )}
-              </>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-900 mb-3">Product Images</label>
-            {data.images && data.images.length > 0 && (
-              <div className="mb-4">
-                <p className="text-sm text-gray-600 mb-3">Current Images ({data.images.length})</p>
-                <div className="grid grid-cols-3 gap-4">
-                  {data.images.map((img, idx) => (
-                    <div key={idx} className="relative group">
-                      <div className="relative w-full h-32 bg-gray-100 rounded-md overflow-hidden">
-                        <img src={img} alt={`Product ${idx + 1}`} className="w-full h-full object-cover" />
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setData({ ...data, images: data.images.filter((_, i) => i !== idx) })}
-                        className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {uploadError && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
-                <p className="text-sm text-red-800">{uploadError}</p>
-              </div>
-            )}
-
-            <div className="mt-4 space-y-3">
-              <div
-                onDrop={(e) => {
-                  e.preventDefault();
-                  handleFileUpload(Array.from(e.dataTransfer.files));
-                }}
-                onDragOver={(e) => e.preventDefault()}
-                className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#8B4513] hover:bg-orange-50 transition-colors"
-              >
-                <svg className="mx-auto h-12 w-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        <div className="bg-white shadow rounded-lg p-8">
+          {loading && (
+            <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
+              <div className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm text-[#8B4513]">
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                <p className="text-sm text-gray-600 mb-2">
-                  <label htmlFor="file-upload" className="cursor-pointer font-medium text-[#8B4513] hover:text-[#703810]">
-                    Click to upload
-                  </label>
-                  {' '}or drag and drop
-                </p>
-                <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
-                <input
-                  id="file-upload"
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => handleFileUpload(Array.from(e.target.files || []))}
-                  disabled={uploading}
-                />
+                Loading product...
               </div>
+            </div>
+          )}
+          {error && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
+              <p className="text-sm font-medium text-red-800">{error}</p>
+            </div>
+          )}
+          {success && (
+            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-md">
+              <p className="text-sm font-medium text-green-800">{success}</p>
+            </div>
+          )}
 
-              <div className="flex gap-2">
+          <form onSubmit={submit} className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-900">Title</label>
+              <input
+                type="text"
+                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
+                value={data.title}
+                onChange={e => setData({ ...data, title: e.target.value })}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-900">Slug</label>
+              <input
+                type="text"
+                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
+                value={data.slug}
+                onChange={e => setData({ ...data, slug: e.target.value })}
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-900">MRP Price</label>
+                <div className="mt-1 relative">
+                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">₹</span>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    className="block w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 pl-7 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
+                    value={data.mrp}
+                    onChange={e => setData({ ...data, mrp: Number(e.target.value) })}
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-900">Offer Price</label>
+                <div className="mt-1 relative">
+                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">₹</span>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    className="block w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 pl-7 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
+                    value={data.price}
+                    onChange={e => setData({ ...data, price: Number(e.target.value) })}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 mt-4">
+              <label className="block text-sm font-medium text-gray-900">Stock</label>
+              <input
+                type="number"
+                min="0"
+                className="w-24 rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
+                value={data.stock}
+                onChange={e => setData({ ...data, stock: Number(e.target.value) })}
+                disabled={data.stock === 0}
+              />
+              <label className="flex items-center gap-2 cursor-pointer">
                 <input
-                  ref={urlInputRef}
-                  type="url"
-                  placeholder="Or paste image URL here"
-                  className="flex-1 rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      const url = e.target.value.trim();
+                  type="checkbox"
+                  checked={data.stock === 0}
+                  onChange={e => setData({ ...data, stock: e.target.checked ? 0 : 1 })}
+                />
+                <span className="text-sm">Out of Stock</span>
+              </label>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-3">Categories</label>
+              {categoriesLoading ? (
+                <div className="text-sm text-gray-600">Loading categories...</div>
+              ) : (
+                <>
+                  <div className="flex gap-2 flex-wrap mb-3">
+                    {categories.map((cat) => {
+                      const active = data.categories && data.categories.includes(cat.name);
+                      return (
+                        <button
+                          key={cat._id}
+                          type="button"
+                          onClick={() => {
+                            setData(prev => {
+                              const list = new Set(prev.categories || []);
+                              if (list.has(cat.name)) list.delete(cat.name);
+                              else list.add(cat.name);
+                              return { ...prev, categories: Array.from(list) };
+                            });
+                          }}
+                          className={`px-3 py-1 rounded-full text-sm font-medium border ${active ? 'bg-[#8B4513] text-white border-[#8B4513]' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}>
+                          {cat.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {data.categories && data.categories.length > 0 && (
+                    <p className="mt-2 text-sm text-gray-600">Selected: {data.categories.join(', ')}</p>
+                  )}
+                </>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-3">Product Images</label>
+              {data.images && data.images.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-sm text-gray-600 mb-3">Current Images ({data.images.length})</p>
+                  <div className="grid grid-cols-3 gap-4">
+                    {data.images.map((img, idx) => (
+                      <div key={idx} className="relative group">
+                        <div className="relative w-full h-32 bg-gray-100 rounded-md overflow-hidden">
+                          <img src={img} alt={`Product ${idx + 1}`} className="w-full h-full object-cover" />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setData({ ...data, images: data.images.filter((_, i) => i !== idx) })}
+                          className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {uploadError && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                  <p className="text-sm text-red-800">{uploadError}</p>
+                </div>
+              )}
+
+              <div className="mt-4 space-y-3">
+                <div
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    handleFileUpload(Array.from(e.dataTransfer.files));
+                  }}
+                  onDragOver={(e) => e.preventDefault()}
+                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#8B4513] hover:bg-orange-50 transition-colors"
+                >
+                  <svg className="mx-auto h-12 w-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <p className="text-sm text-gray-600 mb-2">
+                    <label htmlFor="file-upload" className="cursor-pointer font-medium text-[#8B4513] hover:text-[#703810]">
+                      Click to upload
+                    </label>
+                    {' '}or drag and drop
+                  </p>
+                  <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => handleFileUpload(Array.from(e.target.files || []))}
+                    disabled={uploading}
+                  />
+                </div>
+
+                <div className="flex gap-2">
+                  <input
+                    ref={urlInputRef}
+                    type="url"
+                    placeholder="Or paste image URL here"
+                    className="flex-1 rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const url = e.target.value.trim();
+                        if (url) {
+                          setData(prev => ({ ...prev, images: [...(prev.images || []), url] }));
+                          if (urlInputRef.current) {
+                            urlInputRef.current.value = '';
+                          }
+                        }
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const url = urlInputRef.current?.value.trim();
                       if (url) {
                         setData(prev => ({ ...prev, images: [...(prev.images || []), url] }));
                         if (urlInputRef.current) {
                           urlInputRef.current.value = '';
                         }
                       }
-                    }
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    const url = urlInputRef.current?.value.trim();
-                    if (url) {
-                      setData(prev => ({ ...prev, images: [...(prev.images || []), url] }));
-                      if (urlInputRef.current) {
-                        urlInputRef.current.value = '';
-                      }
-                    }
-                  }}
-                  className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B4513]"
-                >
-                  Add
-                </button>
-              </div>
-            </div>
-
-            {uploading && (
-              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-                <div className="inline-flex items-center text-sm text-[#8B4513]">
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Uploading images...
+                    }}
+                    className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B4513]"
+                  >
+                    Add
+                  </button>
                 </div>
               </div>
-            )}
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-900">Description</label>
-            <textarea
-              rows={6}
-              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
-              value={data.description}
-              onChange={e => setData({ ...data, description: e.target.value })}
-            />
-          </div>
+              {uploading && (
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                  <div className="inline-flex items-center text-sm text-[#8B4513]">
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Uploading images...
+                  </div>
+                </div>
+              )}
+            </div>
 
-          <div className="flex items-center justify-end gap-3 pt-6 border-t border-gray-200">
-            <button
-              type="button"
-              onClick={() => router.push('/admin/products')}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B4513]"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#8B4513] hover:bg-[#703810] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B4513]"
-            >
-              {id ? 'Update Product' : 'Create Product'}
-            </button>
-          </div>
-        </form>
+            <div>
+              <label className="block text-sm font-medium text-gray-900">Description</label>
+              <textarea
+                rows={6}
+                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
+                value={data.description}
+                onChange={e => setData({ ...data, description: e.target.value })}
+              />
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-6 border-t border-gray-200">
+              <button
+                type="button"
+                onClick={() => router.push('/admin/products')}
+                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B4513]"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#8B4513] hover:bg-[#703810] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B4513]"
+              >
+                {id ? 'Update Product' : 'Create Product'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }
