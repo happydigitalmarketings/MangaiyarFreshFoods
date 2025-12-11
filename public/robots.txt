@@ -11,5 +11,5 @@ Allow: /?*category*
 Crawl-delay: 1
 
 # Sitemaps
-Sitemap: https://www.minukkisarees.com/sitemap.xml
-Sitemap: https://minukkisarees.com/sitemap.xml
+Sitemap: https://www.minukki.in/sitemap.xml
+Sitemap: https://minukki.in/sitemap.xml
