@@ -1,7 +1,7 @@
-import { connectDB } from '../lib/db';
+import connectDB  from '../lib/db';
 import Product from '../models/Product';
 import Category from '../models/Category';
-
+i
 const BASE_URL = "https://minukki.in";  // <<< FIXED DOMAIN
 
 function generateSiteMap(products, categories) {
