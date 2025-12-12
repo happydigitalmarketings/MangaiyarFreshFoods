@@ -20,20 +20,20 @@ export default function Home({products}){
         
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.minukkisarees.com/" />
+        <meta property="og:url" content="https://minukki.in/" />
         <meta property="og:title" content="Kerala Sarees - Traditional Elegance | Minukki Sarees" />
         <meta property="og:description" content="Discover our exquisite collection of traditional Kerala sarees, handcrafted with love and heritage." />
-        <meta property="og:image" content="https://www.minukkisarees.com/images/logo.jpg" />
+        <meta property="og:image" content="https://minukki.in/images/logo.jpg" />
 
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://www.minukkisarees.com/" />
+        <meta property="twitter:url" content="https://minukki.in/" />
         <meta property="twitter:title" content="Kerala Sarees - Traditional Elegance | Minukki Sarees" />
         <meta property="twitter:description" content="Discover our exquisite collection of traditional Kerala sarees, handcrafted with love and heritage." />
-        <meta property="twitter:image" content="https://www.minukkisarees.com/images/logo.jpg" />
+        <meta property="twitter:image" content="https://minukki.in/images/logo.jpg" />
 
         {/* Canonical */}
-        <link rel="canonical" href="https://www.minukkisarees.com/" />
+        <link rel="canonical" href="https://minukki.in/" />
         <link rel="icon" href="/images/logo-symbol.png" />
         
         {/* Structured Data */}

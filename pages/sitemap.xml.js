@@ -2,36 +2,43 @@ import { connectDB } from '../lib/db';
 import Product from '../models/Product';
 import Category from '../models/Category';
 
+const BASE_URL = "https://minukki.in";  // <<< FIXED DOMAIN
+
 function generateSiteMap(products, categories) {
   return `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
       <!-- Static Pages -->
       <url>
-        <loc>https://www.minukkisarees.com</loc>
+        <loc>${BASE_URL}</loc>
         <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
       </url>
+
       <url>
-        <loc>https://www.minukkisarees.com/products</loc>
+        <loc>${BASE_URL}/products</loc>
         <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
       </url>
+
       <url>
-        <loc>https://www.minukkisarees.com/about</loc>
+        <loc>${BASE_URL}/about</loc>
         <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
       </url>
+
       <url>
-        <loc>https://www.minukkisarees.com/contact</loc>
+        <loc>${BASE_URL}/contact</loc>
         <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
       </url>
+
       <url>
-        <loc>https://www.minukkisarees.com/blog</loc>
+        <loc>${BASE_URL}/blog</loc>
         <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
@@ -42,7 +49,7 @@ function generateSiteMap(products, categories) {
         .map(({ slug, updatedAt }) => {
           return `
       <url>
-        <loc>${`https://www.minukkisarees.com/product/${slug}`}</loc>
+        <loc>${BASE_URL}/product/${slug}</loc>
         <lastmod>${updatedAt?.split('T')[0] || new Date().toISOString().split('T')[0]}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
@@ -57,7 +64,7 @@ function generateSiteMap(products, categories) {
           const slug = name.toLowerCase().replace(/\s+/g, '-');
           return `
       <url>
-        <loc>${`https://www.minukkisarees.com/products?category=${slug}`}</loc>
+        <loc>${BASE_URL}/products?category=${slug}</loc>
         <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
@@ -65,13 +72,13 @@ function generateSiteMap(products, categories) {
     `;
         })
         .join('')}
+
     </urlset>
   `;
 }
 
 export async function getServerSideProps({ res }) {
   try {
-    // Note: You may need to adjust this based on your actual DB connection setup
     const products = await Product.find({}, { slug: 1, updatedAt: 1 }).lean();
     const categories = await Category.find({}, { name: 1 }).lean();
 
@@ -81,33 +88,28 @@ export async function getServerSideProps({ res }) {
     res.write(sitemap);
     res.end();
 
-    return {
-      props: {},
-    };
+    return { props: {} };
   } catch (error) {
     console.error('Error generating sitemap:', error);
-    
-    // Return a basic sitemap on error
+
     const basicSitemap = `<?xml version="1.0" encoding="UTF-8"?>
       <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
         <url>
-          <loc>https://www.minukkisarees.com</loc>
+          <loc>${BASE_URL}</loc>
           <priority>1.0</priority>
         </url>
         <url>
-          <loc>https://www.minukkisarees.com/products</loc>
+          <loc>${BASE_URL}/products</loc>
           <priority>0.9</priority>
         </url>
       </urlset>
     `;
-    
+
     res.setHeader('Content-Type', 'text/xml');
     res.write(basicSitemap);
     res.end();
 
-    return {
-      props: {},
-    };
+    return { props: {} };
   }
 }
 

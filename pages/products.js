@@ -68,12 +68,12 @@ export default function Products({ products }) {
         
         {/* Open Graph */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.minukkisarees.com/products" />
+        <meta property="og:url" content="https://minukki.in/products" />
         <meta property="og:title" content="Our Collections | Traditional Sarees - Minukki Sarees" />
         <meta property="og:description" content="Explore our beautiful collection of traditional and modern sarees." />
 
         {/* Canonical */}
-        <link rel="canonical" href="https://www.minukkisarees.com/products" />
+        <link rel="canonical" href="https://minukki.in/products" />
         
         {/* Structured Data */}
         <script type="application/ld+json">

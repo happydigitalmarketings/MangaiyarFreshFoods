@@ -17,12 +17,12 @@ export default function About() {
         
         {/* Open Graph */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.minukkisarees.com/about" />
+        <meta property="og:url" content="https://minukki.in/about" />
         <meta property="og:title" content="About Us - Our Heritage & Mission | Minukki Sarees" />
         <meta property="og:description" content="Learn about our heritage, values, and commitment to preserving traditional Kerala saree craftsmanship." />
 
         {/* Canonical */}
-        <link rel="canonical" href="https://www.minukkisarees.com/about" />
+        <link rel="canonical" href="https://minukki.in/about" />
         
         {/* Structured Data */}
         <script type="application/ld+json">
