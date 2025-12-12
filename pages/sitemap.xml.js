@@ -85,6 +85,9 @@ export async function getServerSideProps({ res }) {
     const products = await Product.find({}, { slug: 1, updatedAt: 1 }).lean();
     const categories = await Category.find({}, { name: 1 }).lean();
 
+    console.log('Products:', products.length);
+console.log('Categories:', categories.length);
+
     const sitemap = generateSiteMap(products || [], categories || []);
 
     res.setHeader('Content-Type', 'text/xml');
