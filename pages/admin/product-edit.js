@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import AdminLayout from '../../components/AdminLayout';
+import Toast from '../../components/Toast';
 
 export default function ProductEdit() {
   const router = useRouter();
   const { id } = router.query;
-  const [data, setData] = useState({ title: '', slug: '', description: '', price: 0, mrp: 0, stock: 0, images: [], categories: [] });
+  const [data, setData] = useState({ title: '', slug: '', description: '', price: 0, mrp: 0, stock: 0, weight: '', images: [], categories: [], order: 0 });
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('info');
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
   const urlInputRef = useRef(null);
@@ -90,13 +93,29 @@ export default function ProductEdit() {
       const res = await fetch(endpoint, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(submitData) });
       if (!res.ok) {
         const txt = await res.text();
-        try { const parsed = JSON.parse(txt); throw new Error(parsed.message || 'Save failed'); } catch { throw new Error(txt || `Save failed (${res.status})`); }
+        let errorMsg = 'Save failed';
+        try { 
+          const parsed = JSON.parse(txt); 
+          errorMsg = parsed.message || 'Save failed';
+        } catch { 
+          errorMsg = txt || `Save failed (${res.status})`;
+        }
+        setError(errorMsg);
+        setToastMessage(errorMsg);
+        setToastType('error');
+        throw new Error(errorMsg);
       }
-      setSuccess('Product saved successfully');
+      const successMsg = 'Product saved successfully!';
+      setSuccess(successMsg);
+      setToastMessage(successMsg);
+      setToastType('success');
       // small delay so the admin sees the success state
       setTimeout(() => router.push('/admin/products'), 600);
     } catch (err) {
-      setError(err.message || 'Failed to save product');
+      const errorMsg = err.message || 'Failed to save product';
+      setError(errorMsg);
+      setToastMessage(errorMsg);
+      setToastType('error');
     }
   }
 
@@ -151,8 +170,18 @@ export default function ProductEdit() {
     }
   }
 
+  const showToast = (message, type = 'info') => {
+    setToastMessage(message);
+    setToastType(type);
+  };
+
   return (
     <AdminLayout user={null} activeMenu="/admin/products">
+      <Toast 
+        message={toastMessage} 
+        type={toastType} 
+        onClose={() => setToastMessage('')}
+      />
       <div className="mx-auto py-6 px-6">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">{id ? 'Edit' : 'Create'} Product</h1>
@@ -255,6 +284,30 @@ export default function ProductEdit() {
                 />
                 <span className="text-sm">Out of Stock</span>
               </label>
+            </div>
+
+            <div className="flex items-center gap-4 mt-4">
+              <label className="block text-sm font-medium text-gray-900">Display Order</label>
+              <input
+                type="number"
+                min="0"
+                className="w-24 rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
+                value={data.order}
+                onChange={e => setData({ ...data, order: Number(e.target.value) })}
+              />
+              <span className="text-xs text-gray-500">(Lower numbers appear first)</span>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-900">Weight/Unit</label>
+              <input
+                type="text"
+                placeholder="e.g., 1 kg, 1 dozen, 500g, 1 litre"
+                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
+                value={data.weight || ''}
+                onChange={e => setData({ ...data, weight: e.target.value })}
+              />
+              <p className="mt-1 text-xs text-gray-500">Specify the unit/quantity like "1 kg", "1 dozen", "500g", "1 litre", etc.</p>
             </div>
 
             <div>

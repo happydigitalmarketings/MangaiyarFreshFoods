@@ -134,7 +134,7 @@ export async function getStaticProps() {
     const Product = (await import('../models/Product')).default;
 
     await connectDB();
-    const products = await Product.find({}).sort({ createdAt: -1 }).lean();
+    const products = await Product.find({}).sort({ order: 1, createdAt: -1 }).lean();
 
     return {
       props: {

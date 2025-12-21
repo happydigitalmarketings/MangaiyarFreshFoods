@@ -5,6 +5,24 @@
 html, body, #__next { height: 100%; }
 body { @apply bg-gray-50 text-gray-800; }
 
+/* Toast Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  .animate-fadeInUp {
+    animation: fadeInUp 0.3s ease-out;
+  }
+}
+
 /* Global Color Scheme */
 @layer components {
   .text-primary { @apply text-[#8B4513]; }

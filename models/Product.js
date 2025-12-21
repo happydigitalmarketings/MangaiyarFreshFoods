@@ -7,9 +7,11 @@ const ProductSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   mrp: Number,
   stock: { type: Number, default: 0 },
+  weight: { type: String },
   images: [String],
   categories: [String],
   attributes: Object,
+  order: { type: Number, default: 1, index: true },
   createdAt: { type: Date, default: Date.now }
 });
 

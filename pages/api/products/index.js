@@ -19,7 +19,7 @@ export default async function handler(req, res) {
       const products = await Product.find(query)
         .skip((parseInt(page) - 1) * parseInt(limit))
         .limit(parseInt(limit))
-        .sort({ createdAt: -1 })
+        .sort({ order: 1, createdAt: -1 })
         .lean();
       
       res.json(products);

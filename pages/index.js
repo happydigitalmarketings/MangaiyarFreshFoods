@@ -42,7 +42,7 @@ export default function Home({products}){
               </Link>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
               {products && products.length > 0 ? (
                 products.slice(0, 12).map((product) => (
                   <ProductCard key={product._id} product={product} />
@@ -69,7 +69,7 @@ export async function getServerSideProps() {
 
     await connectDB();
     const products = await Product.find({})
-      .sort({ createdAt: -1 })
+      .sort({ order: 1, createdAt: -1 })
       .limit(20)
       .lean();
 

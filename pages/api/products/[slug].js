@@ -1,8 +1,8 @@
 // pages/api/products/[slug].js
-const connectDB = require('../../../lib/db').default;
-const Product = require('../../../models/Product').default;
-const { getUserFromReq } = require('../_utils');
-const mongoose = require('mongoose');
+import connectDB from '../../../lib/db';
+import Product from '../../../models/Product';
+import { getUserFromReq } from '../_utils';
+import mongoose from 'mongoose';
 
 const handler = async (req, res) => {
   await connectDB();
@@ -11,7 +11,7 @@ const handler = async (req, res) => {
   const query = mongoose.Types.ObjectId.isValid(slug) ? { _id: slug } : { slug };
 
   if (req.method === 'GET') {
-    const product = await Product.findOne(query);
+    const product = await Product.findOne(query).lean();
     if (!product) return res.status(404).json({ message: 'Product not found' });
     res.json(product);
     return;
@@ -37,5 +37,4 @@ const handler = async (req, res) => {
   res.status(405).end();
 };
 
-module.exports = handler;
-module.exports.default = handler;
+export default handler;
