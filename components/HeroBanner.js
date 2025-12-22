@@ -88,8 +88,8 @@ export default function HeroBanner() {
               {/* Discount Badge */}
               <div className="absolute top-6 right-6 bg-yellow-400 rounded-full w-24 h-24 flex items-center justify-center text-center z-20 shadow-lg">
                 <div>
-                  <p className="text-lg font-bold text-gray-800">50%</p>
-                  <p className="text-xs font-bold text-gray-800">OFF</p>
+                  <p className="text-lg font-bold text-white">50%</p>
+                  <p className="text-xs font-bold text-white">OFF</p>
                 </div>
               </div>
 
