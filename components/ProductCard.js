@@ -84,20 +84,20 @@ export default function ProductCard({product}) {
             </div>
 
             {/* Title */}
-            <h3 className="font-semibold text-sm text-gray-800 group-hover:text-green-600 transition-colors line-clamp-2 mb-3">
+            <h3 className="font-semibold text-md text-gray-600 group-hover:text-green-600 transition-colors line-clamp-2 mb-2" style={{fontFamily: 'Poppins', fontWeight: 600}}>
               {product.title}
             </h3>
 
             {/* Unit/Weight */}
-            <p className="text-xs text-gray-600 font-medium mb-3">
+            <p className="text-sm text-gray-600 font-medium mb-3">
               {product.weight || 'Standard Pack'}
             </p>
 
             {/* Price */}
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg font-bold text-gray-900">₹{Math.round(product.price).toLocaleString('en-IN')}</span>
+              <span className="text-lg font-bold text-gray-900" >₹{Math.round(product.price).toLocaleString('en-IN')}</span>
               {product.originalPrice && (
-                <span className="text-xs text-gray-500 line-through">₹{Math.round(product.originalPrice).toLocaleString('en-IN')}</span>
+                <span className="text-md text-gray-500 line-through">₹{Math.round(product.originalPrice).toLocaleString('en-IN')}</span>
               )}
             </div>
 
@@ -105,7 +105,7 @@ export default function ProductCard({product}) {
             <button 
               onClick={handleAddToCart}
               disabled={product.stock === 0}
-              className={`w-full py-2 rounded-md font-semibold text-xs transition-colors flex items-center justify-center gap-2 ${
+              className={`w-full py-2 rounded-md font-semibold text-xd transition-colors flex items-center justify-center gap-2 ${
                 product.stock === 0 
                   ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                   : 'bg-green-600 text-white hover:bg-green-700'
