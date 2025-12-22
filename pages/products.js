@@ -81,7 +81,7 @@ export default function Products({ products }) {
         </script>
       </Head>
 
-      <main className="flex-grow container-fluid  px-4 py-8 bg-[#FDF8F1]">
+      <main className="flex-grow container-fluid  px-4 py-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Select a Category</h1>
         </div>

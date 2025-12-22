@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import AdminLayout from '../../components/AdminLayout';
+import Toast from '../../components/Toast';
 import { verifyToken } from '../../lib/auth';
 
 export default function AdminBlog({ user }) {
@@ -19,6 +20,8 @@ export default function AdminBlog({ user }) {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('info');
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -69,6 +72,8 @@ export default function AdminBlog({ user }) {
         });
 
       if (response.ok) {
+        setToastMessage('Blog post created successfully!');
+        setToastType('success');
         setSuccess('Blog post created successfully!');
           setFormData({ title: '', content: '', excerpt: '', tags: '', author: safeUserName });
           // clear selected file and preview (revoke object URL to free memory)
@@ -80,10 +85,14 @@ export default function AdminBlog({ user }) {
         fetchPosts();
       } else {
         const data = await response.json().catch(() => ({}));
+          setToastMessage(data.message || 'Failed to create blog post');
+          setToastType('error');
           setError(data.message || 'Failed to create blog post');
       }
     } catch (error) {
       console.error('Error creating post:', error);
+      setToastMessage('Failed to create blog post');
+      setToastType('error');
       setError('Failed to create blog post');
     } finally {
       setSubmitting(false);
@@ -131,6 +140,11 @@ export default function AdminBlog({ user }) {
 
   return (
     <AdminLayout user={user}>
+      <Toast 
+        message={toastMessage} 
+        type={toastType} 
+        onClose={() => setToastMessage('')}
+      />
       <Head>
         <title>Manage Blog | Minukki Admin</title>
       </Head>
@@ -274,7 +288,7 @@ export default function AdminBlog({ user }) {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className={`inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${submitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#8B4513] hover:bg-[#703810]'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B4513]`}
+                  className={`inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${submitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600`}
                 >
                   {submitting ? (
                     <>

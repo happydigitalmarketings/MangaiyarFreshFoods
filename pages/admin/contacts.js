@@ -105,7 +105,7 @@ export default function ContactsPage({ user }) {
     <AdminLayout user={user}>
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <h1 className="text-2xl sm:text-3xl font-serif text-[#8B4513]">Contact Messages</h1>
+          <h1 className="text-2xl sm:text-3xl font-serif text-green-600">Contact Messages</h1>
           <div className="text-sm text-gray-600">
             Total: <span className="font-semibold">{total}</span>
           </div>
