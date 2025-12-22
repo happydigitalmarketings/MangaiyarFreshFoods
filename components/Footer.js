@@ -30,10 +30,10 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><Link href="/" className="text-gray-400 hover:text-white text-sm">About Us</Link></li>
+              <li><Link href="/about" className="text-gray-400 hover:text-white text-sm">About Us</Link></li>
               <li><Link href="/products" className="text-gray-400 hover:text-white text-sm">All Products</Link></li>
               <li><Link href="/blog" className="text-gray-400 hover:text-white text-sm">Blog</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white text-sm">Track Order</Link></li>
+              <li><Link href="/" className="text-gray-400 hover:text-white text-sm">Today's Deals</Link></li>
             </ul>
           </div>
 
@@ -41,10 +41,10 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Customer Service</h3>
             <ul className="space-y-2">
+              <li><Link href="/contact" className="text-gray-400 hover:text-white text-sm">Contact Us</Link></li>
               <li><Link href="/contact" className="text-gray-400 hover:text-white text-sm">Help Center</Link></li>
               <li><Link href="#" className="text-gray-400 hover:text-white text-sm">Return Policy</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white text-sm">Privacy Policy</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white text-sm">Terms & Conditions</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-white text-sm">Privacy Policy</Link></li>             
             </ul>
           </div>
 
