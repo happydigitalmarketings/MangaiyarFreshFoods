@@ -5,7 +5,6 @@ import Header from '../components/Header';
 
 const initialForm = {
   firstName: '',
-  lastName: '',
   company: '',
   country: 'India',
   address: '',
@@ -36,8 +35,7 @@ export default function Checkout() {
 
   function validate() {
     const newErrors = {};
-    if (!form.firstName) newErrors.firstName = 'First name is required.';
-    if (!form.lastName) newErrors.lastName = 'Last name is required.';
+    if (!form.firstName) newErrors.firstName = 'Full name is required.';
     if (!form.address) newErrors.address = 'Street address is required.';
     if (!form.city) newErrors.city = 'Town/City is required.';
     if (!form.pin) newErrors.pin = 'PIN Code is required.';
@@ -103,7 +101,7 @@ export default function Checkout() {
           setOrderPlaced(true);
           setOrderId(data.orderId);
         },
-        prefill: { name: form.firstName + ' ' + form.lastName, email: form.email },
+        prefill: { name: form.firstName, email: form.email },
       };
       if (typeof window !== 'undefined') {
         if (!window.Razorpay) {
@@ -134,7 +132,6 @@ export default function Checkout() {
   if (orderPlaced) {
     const orderDetails = {
       firstName: form.firstName,
-      lastName: form.lastName,
       email: form.email,
       phone: form.phone,
       address: form.address,
@@ -221,7 +218,7 @@ export default function Checkout() {
                   <h3 className="text-xl font-bold text-gray-900">Shipping Address</h3>
                 </div>
                 <div className="text-gray-700 space-y-2 bg-gray-50 p-4 rounded">
-                  <p className="font-semibold text-gray-900">{form.firstName} {form.lastName}</p>
+                  <p className="font-semibold text-gray-900">{form.firstName}</p>
                   <p>{form.address} {form.address2 ? form.address2 + ',' : ''}</p>
                   <p>{form.city}, {form.state} {form.pin}</p>
                   <p>{form.country}</p>
@@ -254,7 +251,7 @@ export default function Checkout() {
                   <h3 className="text-xl font-bold text-gray-900">Billing Address</h3>
                 </div>
                 <div className="text-gray-700 space-y-2 bg-gray-50 p-4 rounded">
-                  <p className="font-semibold text-gray-900">{form.firstName} {form.lastName}</p>
+                  <p className="font-semibold text-gray-900">{form.firstName}</p>
                   <p>{form.address} {form.address2 ? form.address2 + ',' : ''}</p>
                   <p>{form.city}, {form.state} {form.pin}</p>
                   <p>{form.country}</p>
@@ -387,13 +384,10 @@ export default function Checkout() {
                     type="text"
                     placeholder="Enter your full name"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-gray-50"
-                    value={form.firstName + ' ' + form.lastName}
-                    onChange={e => {
-                      const [first, ...rest] = e.target.value.split(' ');
-                      setForm(f => ({ ...f, firstName: first || '', lastName: rest.join(' ') }));
-                    }}
+                    value={form.firstName}
+                    onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))}
                   />
-                  {(errors.firstName || errors.lastName) && <div className="text-red-600 text-xs mt-1">{errors.firstName || errors.lastName}</div>}
+                  {errors.firstName && <div className="text-red-600 text-xs mt-1">{errors.firstName}</div>}
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-2">Phone Number <span className="text-red-500">*</span></label>

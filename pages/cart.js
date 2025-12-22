@@ -29,7 +29,7 @@ export default function CartPage(){
             ) : (
               <div className="bg-white rounded-lg shadow overflow-hidden">
                 {/* Table Header - Hidden on mobile */}
-                <div className="hidden md:grid grid-cols-12 gap-4 bg-yellow-400 p-4 font-semibold text-white">
+                <div className="hidden md:grid grid-cols-12 gap-4 bg-green-600 p-4 font-semibold text-white">
                   <div className="col-span-1"></div>
                   <div className="col-span-5">Product</div>
                   <div className="col-span-2 text-center">Price</div>
@@ -40,10 +40,9 @@ export default function CartPage(){
                 {/* Table Body */}
                 <div className="divide-y divide-gray-200">
                   {cart.map((item, idx) => {
-                    const imgs = item.product.images || [];
                     const itemSubtotal = item.price * item.qty;
                     return (
-                      <div key={item.product._id} className="p-4">
+                      <div key={item._id} className="p-4">
                         {/* Desktop View: Grid */}
                         <div className="hidden md:grid grid-cols-12 gap-4 items-center hover:bg-gray-50">
                           {/* Remove Button */}
@@ -60,15 +59,15 @@ export default function CartPage(){
                           {/* Product Column */}
                           <div className="col-span-5 flex items-center gap-3">
                             <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center flex-shrink-0">
-                              {imgs[0] ? (
-                                <img src={imgs[0]} alt={item.product.title} className="w-full h-full object-cover rounded" />
+                              {item.image ? (
+                                <img src={item.image} alt={item.title} className="w-full h-full object-cover rounded" />
                               ) : (
                                 <div className="text-gray-300 text-xs">No Image</div>
                               )}
                             </div>
                             <div>
-                              <div className="font-medium text-gray-900">{item.product.title}</div>
-                              {item.product.subtitle && <div className="text-xs text-gray-500">{item.product.subtitle}</div>}
+                              <div className="font-medium text-gray-900">{item.title}</div>
+                              {item.weight && <div className="text-xs text-gray-500">{item.weight}</div>}
                             </div>
                           </div>
 
@@ -117,14 +116,14 @@ export default function CartPage(){
                             {/* Product Image & Info */}
                             <div className="flex-1">
                               <div className="w-20 h-20 bg-gray-100 rounded flex items-center justify-center flex-shrink-0 mb-2">
-                                {imgs[0] ? (
-                                  <img src={imgs[0]} alt={item.product.title} className="w-full h-full object-cover rounded" />
+                                {item.image ? (
+                                  <img src={item.image} alt={item.title} className="w-full h-full object-cover rounded" />
                                 ) : (
                                   <div className="text-gray-300 text-xs">No Image</div>
                                 )}
                               </div>
-                              <div className="font-medium text-gray-900 text-sm">{item.product.title}</div>
-                              {item.product.subtitle && <div className="text-xs text-gray-500">{item.product.subtitle}</div>}
+                              <div className="font-medium text-gray-900 text-sm">{item.title}</div>
+                              {item.weight && <div className="text-xs text-gray-500">{item.weight}</div>}
                             </div>
                             {/* Remove Button */}
                             <div className="flex justify-start pt-1">

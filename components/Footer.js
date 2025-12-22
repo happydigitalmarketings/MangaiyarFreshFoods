@@ -52,7 +52,7 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
             <ul className="space-y-2 text-gray-400 text-sm">
-              <li>📞 +91-98765-43210</li>
+              <li>📞 +91-93845-01766</li>
               <li>✉️ support@priyam.com</li>
               <li>📍 123 Market Street, City Center, New Delhi -110001</li>
             </ul>

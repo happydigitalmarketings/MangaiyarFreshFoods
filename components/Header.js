@@ -52,7 +52,7 @@ export default function Header() {
       <div className="bg-green-600 text-white text-sm py-2">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
           <span>🚚 Free delivery on orders above ₹399</span>
-          <span>📞 +91-98765-43210</span>
+          <span>📞 +91-93845-01766</span>
         </div>
       </div>
 
