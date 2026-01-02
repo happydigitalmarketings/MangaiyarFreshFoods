@@ -59,7 +59,7 @@ export default function AdminProducts({ user }) {
   return (
     <AdminLayout user={user}>
       <Head>
-        <title>Manage Products | Priyam Supermarket Admin</title>
+        <title>Manage Products | Mangaiyar Fresh Foods Admin</title>
       </Head>
 
       <div className="space-y-4 sm:space-y-6">

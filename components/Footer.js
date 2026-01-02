@@ -8,13 +8,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand Section */}
           <div>
-            <div className="h-12 w-12 relative mb-4">
-              <Image
-                src="/images/logo.png"
-                alt="Priyam Supermarket"
-                fill
-                className="object-contain"
-              />
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-10 h-10 rounded-xl gradient-hero flex items-center justify-center font-bold text-xl">
+                M
+              </div>
+              <div>
+                <h3 className="text-xl font-display font-bold">Mangaiyar</h3>
+                <p className="text-xs opacity-70">Fresh Foods</p>
+              </div>
             </div>
             <p className="text-gray-400 text-sm">
               Fresh groceries delivered to your door. Quality guaranteed, always fresh, always affordable.
@@ -63,7 +64,7 @@ export default function Footer() {
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-sm">
-              &copy; {new Date().getFullYear()} Priyam Supermarket. All rights reserved.
+              &copy; {new Date().getFullYear()} Mangaiyar Fresh Foods. All rights reserved.
             </p>
             <div className="flex gap-2">
               <span className="text-gray-400 text-xs bg-gray-800 px-3 py-1 rounded">Safe & Secure Payments</span>

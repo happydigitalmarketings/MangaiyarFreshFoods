@@ -56,19 +56,19 @@ Enhanced `/next.config.js`:
 ## 📋 Pages Enhanced with SEO
 
 ### Homepage (`/pages/index.js`)
-- Title: "Kerala Sarees - Traditional Elegance | Minukki Sarees"
+- Title: "Kerala Sarees - Traditional Elegance | Mangaiyar Fresh Foods"
 - Description: Includes key product categories
 - Schema: Organization details
 - Keywords: Kerala sarees, Kasavu, Tissue, Silk, Designer sarees
 
 ### Products Page (`/pages/products.js`)
-- Title: "Our Collections | Traditional Sarees - Minukki Sarees"
+- Title: "Our Collections | Traditional Sarees - Mangaiyar Fresh Foods"
 - Breadcrumb navigation schema
 - Category filtering metadata
 - Keywords: Collections, categories, traditional sarees
 
 ### About Page (`/pages/about.js`)
-- Title: "About Us - Our Heritage & Mission | Minukki Sarees"
+- Title: "About Us - Our Heritage & Mission | Mangaiyar Fresh Foods"
 - Company history and values
 - Breadcrumb schema
 - Keywords: Heritage, craftsmanship, tradition
@@ -184,4 +184,4 @@ const productSchema = generateSchema('Product', {
 ---
 
 **Last Updated:** December 9, 2025
-**Website:** Minukki Sarees
+**Website:** Mangaiyar Fresh Foods

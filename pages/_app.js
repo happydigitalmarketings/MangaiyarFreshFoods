@@ -11,7 +11,7 @@ export default function App({ Component, pageProps }) {
   const isAdminPage = router.pathname.startsWith('/admin');
 
   const [brand, setBrand] = useState({
-    siteName: 'Priyam Supermarket',
+    siteName: 'Mangaiyar Fresh Foods',
     primaryColor: '#8B4513',
     primaryColorDark: '#703810',
     logo: '/images/logo.png',

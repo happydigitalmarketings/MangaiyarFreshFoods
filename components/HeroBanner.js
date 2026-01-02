@@ -63,7 +63,7 @@ export default function HeroBanner() {
             </div>
             
             <p className="text-gray-600 text-lg">
-              Shop from thousands of fresh products at Priyam Supermarket. Quality guaranteed, always fresh, always affordable.
+              Shop from thousands of fresh products at Mangaiyar Fresh Foods. Quality guaranteed, always fresh, always affordable.
             </p>
 
             <div className="flex gap-4 flex-wrap">

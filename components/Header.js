@@ -65,7 +65,7 @@ export default function Header() {
               <div className="h-14 w-14 relative">
                 <Image
                   src="/images/logo.png"
-                  alt="Priyam Supermarket"
+                  alt="Mangaiyar Fresh Foods"
                   fill
                   className="object-contain"
                   priority
@@ -73,7 +73,7 @@ export default function Header() {
                 />
               </div>
             ) : (
-              <div className="text-2xl font-bold text-green-600">Priyam <span className='text-gray-800'>Super Market</span></div>
+              <div className="text-2xl font-bold text-green-600">Mangaiyar <span className='text-gray-800'>Fresh Foods</span></div>
             )}
           </Link>
 

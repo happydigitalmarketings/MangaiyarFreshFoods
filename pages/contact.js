@@ -63,8 +63,8 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Head>
-        <title>Contact Us - Priyam Supermarket</title>
-        <meta name="description" content="Get in touch with Priyam Supermarket" />
+        <title>Contact Us - Mangaiyar Fresh Foods</title>
+        <meta name="description" content="Get in touch with Mangaiyar Fresh Foods" />
       </Head>   
 
       {/* Hero Section */}

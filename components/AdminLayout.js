@@ -68,10 +68,10 @@ export default function AdminLayout({ children, user, activeMenu }) {
         <div className="px-6 py-6 border-b border-gray-200">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 bg-gradient-to-br from-green-600 to-green-700 rounded-lg flex items-center justify-center text-white font-bold text-lg">
-              P
+              M
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Priyam</h1>
+              <h1 className="text-xl font-bold text-gray-900">Mangaiyar</h1>
               <p className="text-xs text-gray-500">Admin Panel</p>
             </div>
           </div>

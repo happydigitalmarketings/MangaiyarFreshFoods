@@ -14,7 +14,7 @@ export default function Home({products}){
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Head>
-        <title>Priyam Supermarket - Fresh Groceries Delivered</title>
+        <title>Mangaiyar Fresh Foods - Fresh Groceries Delivered</title>
         <meta name="description" content="Shop fresh groceries, vegetables, fruits, dairy, and household essentials. Fast delivery, quality guaranteed." />
         <meta name="keywords" content="grocery delivery, fresh vegetables, fruits, dairy products, supermarket, online shopping" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />

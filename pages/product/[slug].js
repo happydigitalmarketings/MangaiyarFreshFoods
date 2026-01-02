@@ -90,7 +90,7 @@ export default function ProductPage({ product }) {
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
       <Head>
-        <title>{product.title} - Priyam Supermarket</title>
+        <title>{product.title} - Mangaiyar Fresh Foods</title>
         <meta name="description" content={product.description || 'Product page'} />
         <meta property="og:title" content={product.title} />
         <meta property="og:description" content={product.description} />

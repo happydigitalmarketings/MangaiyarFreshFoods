@@ -50,7 +50,7 @@ Tracks visitor behavior, traffic sources, and conversions.
    - Click "Start measuring"
 
 2. **Get Tracking Code**
-   - Account name: "Minukki Sarees"
+   - Account name: "Mangaiyar Fresh Foods"
    - Property name: "Website"
    - Choose timezone and currency
    - Click "Create"
@@ -125,7 +125,7 @@ Tells the SEO helpers what your actual domain is.
    Find this section at the top:
    ```javascript
    export const defaultSEO = {
-     siteName: 'Minukki Sarees',
+     siteName: 'Mangaiyar Fresh Foods',
      description: 'Discover exquisite traditional Kerala sarees...',
      url: 'https://minukki.in',  // ← CHANGE THIS
      image: 'https://minukki.in/images/logo.jpg',  // ← CHANGE THIS
@@ -261,7 +261,7 @@ Makes your products show up with ratings & prices in search results.
      return (
        <>
          <Head>
-           <title>{product.name} - Buy Online | Minukki Sarees</title>
+           <title>{product.name} - Buy Online | Mangaiyar Fresh Foods</title>
            <meta name="description" content={product.description?.substring(0, 160)} />
            <meta property="og:title" content={product.name} />
            <meta property="og:description" content={product.description} />

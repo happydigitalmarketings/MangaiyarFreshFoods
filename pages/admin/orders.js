@@ -57,7 +57,7 @@ export default function AdminOrders({ user }) {
   return (
     <AdminLayout user={user}>
       <Head>
-        <title>Manage Orders | Priyam Supermarket Admin</title>
+        <title>Manage Orders | Mangaiyar Fresh Foods Admin</title>
       </Head>
 
       <div className="space-y-4 sm:space-y-6">

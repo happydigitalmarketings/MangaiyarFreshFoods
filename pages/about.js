@@ -11,15 +11,15 @@ export default function About() {
   return (
     <div className="min-h-screen flex flex-col">
       <Head>
-        <title>About Priyam Supermarket - Fresh Groceries Since 2010</title>
-        <meta name="description" content="Learn about Priyam Supermarket's journey of providing fresh groceries and daily essentials with love since 2010." />
+        <title>About Mangaiyar Fresh Foods - Fresh Groceries Since 2010</title>
+        <meta name="description" content="Learn about Mangaiyar Fresh Foods's journey of providing fresh groceries and daily essentials with love since 2010." />
         <meta name="keywords" content="about us, fresh groceries, supermarket, online shopping" />
         <meta name="robots" content="index, follow" />
         
         {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://priyamsupermarket.com/about" />
-        <meta property="og:title" content="About Priyam Supermarket" />
+        <meta property="og:title" content="About Mangaiyar Fresh Foods" />
         <meta property="og:description" content="Learn about our journey and commitment to quality." />
 
         {/* Canonical */}
@@ -39,7 +39,7 @@ export default function About() {
               ← Back to Home
             </Link>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              About Priyam Supermarket
+              About Mangaiyar Fresh Foods
             </h1>
             <p className="text-xl text-green-50">
               Your trusted neighborhood supermarket, serving fresh groceries and daily essentials with love since 2010.
@@ -54,7 +54,7 @@ export default function About() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
               <div>
                 <p className="text-gray-700 mb-6 leading-relaxed">
-                  Priyam Supermarket began as a small family-owned grocery store in 2010, founded with a simple mission: to provide our community with the freshest products at the best prices.
+                  Mangaiyar Fresh Foods began as a small family-owned grocery store in 2010, founded with a simple mission: to provide our community with the freshest products at the best prices.
                 </p>
                 <p className="text-gray-700 mb-6 leading-relaxed">
                   Over the years, we've grown from a single store to becoming one of the most trusted supermarkets in the region. Our commitment to quality, customer service, and community values has remained unchanged.
@@ -68,7 +68,7 @@ export default function About() {
                   <span className="text-8xl font-bold">P</span>
                 </div>
                 <div className="text-center">
-                  <h3 className="text-2xl font-bold text-gray-900">Priyam Supermarket</h3>
+                  <h3 className="text-2xl font-bold text-gray-900">Mangaiyar Fresh Foods</h3>
                   <p className="text-gray-600 mt-2">Serving since 2010</p>
                 </div>
               </div>
