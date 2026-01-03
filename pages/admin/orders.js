@@ -247,16 +247,16 @@ export default function AdminOrders({ user }) {
           <select
             value={order.status || 'pending'}
             onChange={(e) => updateOrderStatus(order._id, e.target.value)}
-            className="px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-green-600 focus:border-green-600 bg-white"
+            className="px-4 py-2 text-sm font-medium border-2 border-gray-400 rounded-md focus:ring-green-600 focus:border-green-600 bg-white text-gray-900 hover:border-gray-500 cursor-pointer"
           >
-            <option value="pending">Pending</option>
-            <option value="processing">Processing</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
+            <option value="pending">📋 Pending</option>
+            <option value="processing">⚙️ Processing</option>
+            <option value="completed">✓ Completed</option>
+            <option value="cancelled">✕ Cancelled</option>
           </select>
           <button
             onClick={() => deleteOrder(order._id)}
-            className="px-4 py-2 text-sm bg-red-100 text-red-700 hover:bg-red-200 rounded-md transition flex items-center gap-2"
+            className="px-5 py-2 text-sm font-semibold bg-red-600 text-white hover:bg-red-700 rounded-md transition flex items-center gap-2 shadow-md"
             title="Delete order"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -418,12 +418,21 @@ export default function AdminOrders({ user }) {
                             {order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN') : 'N/A'}
                           </td>
                           <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <button
-                              onClick={() => setExpandedOrderId(isExpanded ? null : order._id)}
-                              className="text-green-600 hover:text-green-900 transition font-semibold"
-                            >
-                              {isExpanded ? '▼ Hide' : '▶ View'}
-                            </button>
+                            <div className="flex gap-2 items-center">
+                              <button
+                                onClick={() => setExpandedOrderId(isExpanded ? null : order._id)}
+                                className="text-green-600 hover:text-green-900 transition font-semibold px-2 py-1"
+                              >
+                                {isExpanded ? '▼ Hide' : '▶ View'}
+                              </button>
+                              <button
+                                onClick={() => deleteOrder(order._id)}
+                                className="text-red-600 hover:text-red-900 transition font-semibold px-2 py-1"
+                                title="Delete order"
+                              >
+                                🗑️ Delete
+                              </button>
+                            </div>
                           </td>
                         </tr>
                         
