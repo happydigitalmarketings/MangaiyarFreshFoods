@@ -60,7 +60,13 @@ export default function Checkout() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         customer: form,
-        items: cart.map(i => ({ product: i.product?._id || i.product, qty: i.qty, price: i.price })),
+        items: cart.map(i => ({ 
+          product: i.product?._id || i.product, 
+          qty: i.qty, 
+          price: i.price,
+          productTitle: i.title,
+          productImage: i.image
+        })),
         total: subtotal,
         paymentMethod: form.paymentMethod,
       }),

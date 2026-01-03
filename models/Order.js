@@ -4,7 +4,10 @@ const OrderSchema = new mongoose.Schema({
   items: [{ 
     product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' }, 
     qty: Number, 
-    price: Number 
+    price: Number,
+    // Store product details at order time for permanent record
+    productTitle: String,
+    productImage: String
   }],
   total: { 
     type: Number, 

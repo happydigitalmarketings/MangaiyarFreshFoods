@@ -186,14 +186,43 @@ export default async function handler(req, res) {
       throw new Error('Order model not properly initialized');
     }
 
+    // Enrich items with product details (title, image) for permanent storage
+    const enrichedItems = await Promise.all(
+      items.map(async (item) => {
+        const enrichedItem = { ...item };
+        
+        // Use provided values first, then fetch from database if not provided
+        if (!enrichedItem.productTitle || !enrichedItem.productImage) {
+          if (item.product) {
+            try {
+              const product = await Product.findById(item.product).select('title images');
+              if (product) {
+                enrichedItem.productTitle = enrichedItem.productTitle || product.title;
+                enrichedItem.productImage = enrichedItem.productImage || product.images?.[0] || null;
+                console.log(`✓ Enriched item with product: ${product.title}, image: ${enrichedItem.productImage ? 'yes' : 'no'}`);
+              }
+            } catch (err) {
+              console.warn('Could not fetch product details for order item:', err.message);
+            }
+          }
+        }
+        
+        return enrichedItem;
+      })
+    );
+
+    console.log('Enriched items:', enrichedItems);
+
     // Create the order
     const order = await Order.create({
-      items,
+      items: enrichedItems,
       shippingAddress,
       total,
       paymentMethod,
       status: 'pending'
     });
+
+    console.log('Order created:', order);
 
     // Send email BEFORE responding (critical for Vercel)
     await sendOrderConfirmationEmail(order, shippingAddress, items, req);
