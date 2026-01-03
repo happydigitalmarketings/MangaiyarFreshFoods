@@ -74,10 +74,10 @@ export default function HeroBanner() {
                 Shop Now →
               </Link>
               <Link 
-                href="/offers"
+                href="/products"
                 className="px-8 py-3 bg-white border-2 border-green-600 text-green-600 rounded-lg font-semibold hover:bg-green-50 transition-colors"
               >
-                View Offers
+                Explore All Products
               </Link>
             </div>
           </div>
