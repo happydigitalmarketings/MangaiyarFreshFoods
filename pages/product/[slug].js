@@ -23,6 +23,18 @@ export default function ProductPage({ product }) {
   const [currentPrice, setCurrentPrice] = useState(product.price);
   const [currentMrp, setCurrentMrp] = useState(product.mrp);
 
+  // Helper function to ensure weight has unit
+  const getWeightWithUnit = (weight) => {
+    if (!weight) return 'Select Weight';
+    const weightStr = String(weight).trim();
+    // Check if weight already has a unit (g, kg, ml, l, L)
+    if (/\s*(g|kg|ml|l|L)\s*$/i.test(weightStr)) {
+      return weightStr;
+    }
+    // If just a number, add 'g' as default
+    return weightStr + ' g';
+  };
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setPageUrl(window.location.href);
@@ -228,7 +240,7 @@ export default function ProductPage({ product }) {
                   onClick={() => setVariantsOpen(!variantsOpen)}
                   className="w-full flex items-center justify-between px-4 py-3 bg-white border-2 border-gray-300 hover:border-green-600 text-gray-900 font-semibold rounded-lg transition-colors"
                 >
-                  <span>{product.weightVariants[selectedVariant]?.weight || 'Select Weight'}</span>
+                  <span className="font-semibold text-gray-900">{getWeightWithUnit(product.weightVariants[selectedVariant]?.weight)}</span>
                   <svg
                     className={`w-5 h-5 transition-transform text-gray-600 ${variantsOpen ? 'rotate-180' : ''}`}
                     fill="none"
@@ -260,7 +272,7 @@ export default function ProductPage({ product }) {
                         >
                           <div className="flex items-start gap-3 flex-1 text-left">
                             <div className="flex-1">
-                              <div className="font-semibold text-gray-900">{variant.weight}</div>
+                              <div className="font-bold text-lg text-gray-900">{getWeightWithUnit(variant.weight)}</div>
                               <div className="flex items-center gap-2 mt-1 text-sm">
                                 {discountForVariant > 0 && (
                                   <span className="bg-green-600 text-white px-2 py-0.5 rounded text-xs font-bold">
@@ -272,7 +284,6 @@ export default function ProductPage({ product }) {
                                 )}
                                 <span className="font-bold text-green-600">₹{variant.price}</span>
                               </div>
-                              <div className="text-xs text-gray-500 mt-1">⏱ 10 MINS</div>
                             </div>
                           </div>
                           {selectedVariant === idx && (

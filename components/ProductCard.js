@@ -13,6 +13,18 @@ export default function ProductCard({product}) {
   const displayPrice = currentVariant ? currentVariant.price : product.price;
   const displayWeight = currentVariant ? currentVariant.weight : (product.weight || 'Standard Pack');
   
+  // Helper function to ensure weight has unit
+  const getWeightWithUnit = (weight) => {
+    if (!weight) return 'Select Weight';
+    const weightStr = String(weight).trim();
+    // Check if weight already has a unit (g, kg, ml, l, L)
+    if (/\s*(g|kg|ml|l|L)\s*$/i.test(weightStr)) {
+      return weightStr;
+    }
+    // If just a number, add 'g' as default
+    return weightStr + ' g';
+  };
+  
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -117,9 +129,9 @@ export default function ProductCard({product}) {
                     e.stopPropagation();
                     setVariantsOpen(!variantsOpen);
                   }}
-                  className="w-full flex items-center justify-between px-3 py-2 border-2 border-green-600 bg-white text-gray-900 font-semibold rounded-lg hover:border-green-700 transition-colors"
+                  className="w-full flex items-center justify-between px-3 py-2 border-2 border-green-600 bg-white text-gray-900 font-semibold rounded-lg hover:border-green-700 transition-colors min-h-10"
                 >
-                  <span className="text-sm">{product.weightVariants[selectedVariant]?.weight || 'Select Weight'}</span>
+                  <span className="text-sm font-semibold text-gray-900">{getWeightWithUnit(product.weightVariants[selectedVariant]?.weight)}</span>
                   <svg
                     className={`w-4 h-4 transition-transform text-gray-600 ${variantsOpen ? 'rotate-180' : ''}`}
                     fill="none"
@@ -152,7 +164,7 @@ export default function ProductCard({product}) {
                           }`}
                         >
                           <div className="flex-1 min-w-0">
-                            <div className="font-semibold text-sm text-gray-900">{variant.weight}</div>
+                            <div className="font-bold text-base text-gray-900">{getWeightWithUnit(variant.weight)}</div>
                             <div className="flex items-center gap-2 mt-1 text-xs flex-wrap">
                               {discountForVariant > 0 && (
                                 <span className="bg-green-600 text-white px-1.5 py-0.5 rounded text-xs font-bold whitespace-nowrap">
@@ -164,7 +176,6 @@ export default function ProductCard({product}) {
                               )}
                               <span className="font-bold text-green-600 whitespace-nowrap">₹{variant.price}</span>
                             </div>
-                            <div className="text-xs text-gray-500 mt-0.5">⏱ 10 MINS</div>
                           </div>
                           {selectedVariant === idx && (
                             <svg className="w-4 h-4 text-green-600 ml-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -178,9 +189,9 @@ export default function ProductCard({product}) {
                 )}
               </div>
             ) : (
-              <p className="text-sm text-gray-600 font-medium mb-3">
+              <div className="px-3 py-2 border-2 border-gray-200 rounded-lg bg-gray-50 text-gray-600 font-medium text-sm mb-3 min-h-10 flex items-center">
                 {product.weight || 'Standard Pack'}
-              </p>
+              </div>
             )}
 
             {/* Price */}
