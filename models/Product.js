@@ -8,6 +8,12 @@ const ProductSchema = new mongoose.Schema({
   mrp: Number,
   stock: { type: Number, default: 0 },
   weight: { type: String },
+  weightVariants: [{
+    weight: { type: String }, // e.g., "100 g", "250 g", "500 g", "1 kg"
+    price: { type: Number },
+    mrp: { type: Number },
+    stock: { type: Number, default: 0 }
+  }],
   images: [String],
   categories: [String],
   attributes: Object,

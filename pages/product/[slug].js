@@ -16,12 +16,26 @@ export default function ProductPage({ product }) {
   const [qty, setQty] = useState(1);
   const [pageUrl, setPageUrl] = useState('');
   const [selectedImage, setSelectedImage] = useState(product.images?.[0] || null);
+  const [selectedVariant, setSelectedVariant] = useState(
+    product.weightVariants && product.weightVariants.length > 0 ? 0 : null
+  );
+  const [variantsOpen, setVariantsOpen] = useState(false);
+  const [currentPrice, setCurrentPrice] = useState(product.price);
+  const [currentMrp, setCurrentMrp] = useState(product.mrp);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setPageUrl(window.location.href);
     }
   }, []);
+
+  useEffect(() => {
+    if (selectedVariant !== null && product.weightVariants && product.weightVariants[selectedVariant]) {
+      const variant = product.weightVariants[selectedVariant];
+      setCurrentPrice(variant.price);
+      setCurrentMrp(variant.mrp || variant.price);
+    }
+  }, [selectedVariant, product.weightVariants]);
 
   useEffect(() => {
     if (!product || !product._id) return;
@@ -40,18 +54,25 @@ export default function ProductPage({ product }) {
 
   function addToCart(redirect = false) {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existing = cart.find(i => i._id === product._id);
+    const weightLabel = selectedVariant !== null && product.weightVariants 
+      ? product.weightVariants[selectedVariant].weight 
+      : product.weight;
+    const cartItemId = selectedVariant !== null ? `${product._id}-${selectedVariant}` : product._id;
+    
+    const existing = cart.find(i => i._id === cartItemId);
     
     if (existing) {
       existing.qty += qty;
     } else {
       cart.push({
-        _id: product._id,
+        _id: cartItemId,
+        originalId: product._id,
         title: product.title,
-        price: product.price,
-        weight: product.weight,
+        price: currentPrice,
+        weight: weightLabel,
         image: product.images?.[0],
-        qty
+        qty,
+        variant: selectedVariant
       });
     }
     
@@ -83,14 +104,14 @@ export default function ProductPage({ product }) {
     window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
   }
 
-  const discountPercent = product.mrp && product.price < product.mrp 
-    ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
+  const discountPercent = currentMrp && currentPrice < currentMrp 
+    ? Math.round(((currentMrp - currentPrice) / currentMrp) * 100)
     : 0;
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
       <Head>
-        <title>{product.title} - Mangaiyar Fresh Foods</title>
+        <title>{product.title} - Priyam Supermarket</title>
         <meta name="description" content={product.description || 'Product page'} />
         <meta property="og:title" content={product.title} />
         <meta property="og:description" content={product.description} />
@@ -176,37 +197,102 @@ export default function ProductPage({ product }) {
             <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-lg mb-6 border border-gray-200">
               <div className="flex items-end gap-6 mb-4">
                 {/* Original Price */}
-                {product.mrp && (
+                {currentMrp && (
                   <div>
                     <span className="text-xs text-gray-500 uppercase tracking-wide font-semibold">M.R.P.</span>
-                    <div className="text-lg text-gray-400 line-through">₹{product.mrp.toLocaleString('en-IN')}</div>
+                    <div className="text-lg text-gray-400 line-through">₹{currentMrp.toLocaleString('en-IN')}</div>
                   </div>
                 )}
                 
                 {/* Offer Price */}
                 <div>
                   <span className="text-xs text-gray-500 uppercase tracking-wide font-semibold">Price</span>
-                  <div className="text-3xl font-bold text-green-600">₹{product.price.toLocaleString('en-IN')}</div>
+                  <div className="text-3xl font-bold text-green-600">₹{currentPrice.toLocaleString('en-IN')}</div>
                 </div>
               </div>
 
               {/* Savings */}
-              {product.mrp && product.price < product.mrp && (
+              {currentMrp && currentPrice < currentMrp && (
                 <div className="pt-4 border-t border-gray-200">
                   <p className="text-sm text-gray-600">You save</p>
-                  <p className="text-xl font-bold text-green-600">₹{(product.mrp - product.price).toLocaleString('en-IN')}</p>
+                  <p className="text-xl font-bold text-green-600">₹{(currentMrp - currentPrice).toLocaleString('en-IN')}</p>
                 </div>
               )}
             </div>
 
-            {/* Weight/Size Info */}
-            {product.weight && (
-              <div className="mb-6 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                <span className="text-sm text-gray-700">
-                  <span className="font-semibold text-blue-900">Weight/Size:</span> {product.weight}
-                </span>
+            {/* Weight/Size Variants Selector */}
+            {product.weightVariants && product.weightVariants.length > 0 ? (
+              <div className="mb-6">
+                {/* Collapse Header */}
+                <button
+                  onClick={() => setVariantsOpen(!variantsOpen)}
+                  className="w-full flex items-center justify-between px-4 py-3 bg-white border-2 border-gray-300 hover:border-green-600 text-gray-900 font-semibold rounded-lg transition-colors"
+                >
+                  <span>{product.weightVariants[selectedVariant]?.weight || 'Select Weight'}</span>
+                  <svg
+                    className={`w-5 h-5 transition-transform text-gray-600 ${variantsOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                  </svg>
+                </button>
+
+                {/* Expanded Variants List */}
+                {variantsOpen && (
+                  <div className="border border-t-0 border-gray-300 rounded-b-lg bg-white overflow-hidden shadow-lg">
+                    {product.weightVariants.map((variant, idx) => {
+                      const discountForVariant = variant.mrp && variant.price < variant.mrp
+                        ? Math.round(((variant.mrp - variant.price) / variant.mrp) * 100)
+                        : 0;
+                      
+                      return (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            setSelectedVariant(idx);
+                            setVariantsOpen(false);
+                          }}
+                          className={`w-full flex items-center justify-between px-4 py-4 border-b border-gray-200 hover:bg-green-50 transition-colors ${
+                            selectedVariant === idx ? 'bg-green-50 border-l-4 border-l-green-600' : ''
+                          }`}
+                        >
+                          <div className="flex items-start gap-3 flex-1 text-left">
+                            <div className="flex-1">
+                              <div className="font-semibold text-gray-900">{variant.weight}</div>
+                              <div className="flex items-center gap-2 mt-1 text-sm">
+                                {discountForVariant > 0 && (
+                                  <span className="bg-green-600 text-white px-2 py-0.5 rounded text-xs font-bold">
+                                    {discountForVariant}% OFF
+                                  </span>
+                                )}
+                                {variant.mrp && variant.price < variant.mrp && (
+                                  <span className="text-gray-400 line-through">₹{variant.mrp}</span>
+                                )}
+                                <span className="font-bold text-green-600">₹{variant.price}</span>
+                              </div>
+                              <div className="text-xs text-gray-500 mt-1">⏱ 10 MINS</div>
+                            </div>
+                          </div>
+                          {selectedVariant === idx && (
+                            <svg className="w-5 h-5 text-green-600 ml-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-            )}
+            ) : product.weight ? (
+              <div className="mb-6 p-4 bg-gray-100 rounded-lg border border-gray-300">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Weight/Size:</label>
+                <div className="text-lg font-bold text-gray-900">{product.weight}</div>
+                <p className="text-xs text-gray-500 mt-2">Note: Add weightVariants to this product for size options</p>
+              </div>
+            ) : null}
 
             {/* Quantity Selector */}
             <div className="mb-6">

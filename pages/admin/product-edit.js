@@ -6,7 +6,7 @@ import Toast from '../../components/Toast';
 export default function ProductEdit() {
   const router = useRouter();
   const { id } = router.query;
-  const [data, setData] = useState({ title: '', slug: '', description: '', price: 0, mrp: 0, stock: 0, weight: '', images: [], categories: [], order: 0 });
+  const [data, setData] = useState({ title: '', slug: '', description: '', price: 0, mrp: 0, stock: 0, weight: '', weightVariants: [], images: [], categories: [], order: 0 });
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
@@ -308,6 +308,114 @@ export default function ProductEdit() {
                 onChange={e => setData({ ...data, weight: e.target.value })}
               />
               <p className="mt-1 text-xs text-gray-500">Specify the unit/quantity like "1 kg", "1 dozen", "500g", "1 litre", etc.</p>
+            </div>
+
+            {/* Weight Variants Section */}
+            <div className="border border-gray-300 rounded-lg p-6 bg-gray-50">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Weight Variants</h3>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newVariant = { weight: '', price: 0, mrp: 0, stock: 0 };
+                    setData({ ...data, weightVariants: [...(data.weightVariants || []), newVariant] });
+                  }}
+                  className="px-3 py-1 bg-[#8B4513] text-white rounded-md text-sm font-medium hover:bg-[#703810]"
+                >
+                  + Add Variant
+                </button>
+              </div>
+
+              {data.weightVariants && data.weightVariants.length > 0 ? (
+                <div className="space-y-4">
+                  {data.weightVariants.map((variant, idx) => (
+                    <div key={idx} className="bg-white border border-gray-300 rounded-lg p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-medium text-gray-900">Variant {idx + 1}</h4>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setData({ ...data, weightVariants: data.weightVariants.filter((_, i) => i !== idx) });
+                          }}
+                          className="text-red-600 hover:text-red-800 text-sm font-medium"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Weight</label>
+                          <input
+                            type="text"
+                            placeholder="e.g., 100 g, 250 g, 1 kg"
+                            className="block w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
+                            value={variant.weight}
+                            onChange={(e) => {
+                              const updated = [...data.weightVariants];
+                              updated[idx].weight = e.target.value;
+                              setData({ ...data, weightVariants: updated });
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+                          <input
+                            type="number"
+                            min="0"
+                            className="block w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
+                            value={variant.stock || 0}
+                            onChange={(e) => {
+                              const updated = [...data.weightVariants];
+                              updated[idx].stock = Number(e.target.value);
+                              setData({ ...data, weightVariants: updated });
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">MRP</label>
+                          <div className="relative">
+                            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">₹</span>
+                            <input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              className="block w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 pl-7 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
+                              value={variant.mrp || 0}
+                              onChange={(e) => {
+                                const updated = [...data.weightVariants];
+                                updated[idx].mrp = Number(e.target.value);
+                                setData({ ...data, weightVariants: updated });
+                              }}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
+                          <div className="relative">
+                            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">₹</span>
+                            <input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              className="block w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 pl-7 text-gray-900 placeholder-gray-400 focus:border-[#8B4513] focus:outline-none focus:ring-1 focus:ring-[#8B4513]"
+                              value={variant.price || 0}
+                              onChange={(e) => {
+                                const updated = [...data.weightVariants];
+                                updated[idx].price = Number(e.target.value);
+                                setData({ ...data, weightVariants: updated });
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-600 italic">No variants added. Click "+ Add Variant" to add weight options.</p>
+              )}
             </div>
 
             <div>
