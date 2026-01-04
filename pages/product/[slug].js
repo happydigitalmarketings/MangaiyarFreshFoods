@@ -23,6 +23,15 @@ export default function ProductPage({ product }) {
   const [currentPrice, setCurrentPrice] = useState(product.price);
   const [currentMrp, setCurrentMrp] = useState(product.mrp);
 
+  // Reset state when product changes (different slug)
+  useEffect(() => {
+    setSelectedImage(product.images?.[0] || null);
+    setSelectedVariant(product.weightVariants && product.weightVariants.length > 0 ? 0 : null);
+    setCurrentPrice(product.price);
+    setCurrentMrp(product.mrp);
+    setQty(1);
+  }, [product._id, product.slug]);
+
   // Helper function to ensure weight has unit
   const getWeightWithUnit = (weight) => {
     if (!weight) return 'Select Weight';
@@ -66,10 +75,19 @@ export default function ProductPage({ product }) {
 
   function addToCart(redirect = false) {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const weightLabel = selectedVariant !== null && product.weightVariants 
-      ? product.weightVariants[selectedVariant].weight 
-      : product.weight;
-    const cartItemId = selectedVariant !== null ? `${product._id}-${selectedVariant}` : product._id;
+    
+    // Safely get weight label with proper validation
+    let weightLabel = product.weight;
+    if (selectedVariant !== null && product.weightVariants && product.weightVariants.length > selectedVariant) {
+      const variant = product.weightVariants[selectedVariant];
+      if (variant && variant.weight) {
+        weightLabel = variant.weight;
+      }
+    }
+    
+    const cartItemId = selectedVariant !== null && product.weightVariants && product.weightVariants.length > selectedVariant 
+      ? `${product._id}-${selectedVariant}` 
+      : product._id;
     
     const existing = cart.find(i => i._id === cartItemId);
     

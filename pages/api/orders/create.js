@@ -227,6 +227,9 @@ export default async function handler(req, res) {
     // Send email BEFORE responding (critical for Vercel)
     await sendOrderConfirmationEmail(order, shippingAddress, items, req);
 
+    // Send WhatsApp notification
+    await sendWhatsAppNotification(order, shippingAddress, items);
+
     // Return the order ID and success flag
     res.status(201).json({ success: true, orderId: order._id });
     
@@ -347,3 +350,89 @@ async function sendOrderConfirmationEmail(order, shippingAddress, items, req) {
     // Don't throw - we don't want email failure to break order creation
   }
 }
+
+// Function to send WhatsApp notification
+async function sendWhatsAppNotification(order, shippingAddress, items) {
+  try {
+    const customerPhone = shippingAddress?.phone;
+    const adminPhone = process.env.WHATSAPP_ADMIN_NUMBER;
+
+    if (!customerPhone && !adminPhone) {
+      console.log('No WhatsApp numbers configured, skipping WhatsApp notification');
+      return;
+    }
+
+    // Format items list
+    const itemsList = (items || [])
+      .map((i, idx) => `${idx + 1}. ${i.productTitle || i.name || 'Product'} - Qty: ${i.qty} @ ₹${i.price}`)
+      .join('\n');
+
+    // Create message
+    const orderID = String(order._id).slice(-6).toUpperCase();
+    const message = `🎉 *New Order Received!*\n\n*Order ID:* #${orderID}\n*Customer:* ${shippingAddress?.name || 'N/A'}\n*Phone:* ${customerPhone || 'N/A'}\n*Total:* ₹${(order.total || 0).toLocaleString('en-IN')}\n\n*Items:*\n${itemsList}\n\n*Address:*\n${shippingAddress?.address || ''}\n${shippingAddress?.city || ''} - ${shippingAddress?.pin || ''}`;
+
+    // Send to admin if configured
+    if (adminPhone) {
+      await sendWhatsAppMessage(adminPhone, message);
+      console.log('✓ WhatsApp notification sent to admin');
+    }
+
+    // Send confirmation to customer if configured
+    if (customerPhone && process.env.WHATSAPP_SEND_TO_CUSTOMER === 'true') {
+      const customerMessage = `👋 Hi ${shippingAddress?.name || 'there'}!\n\nYour order #${orderID} has been placed successfully! 🎉\n\nTotal: ₹${(order.total || 0).toLocaleString('en-IN')}\n\nWe'll notify you once it's dispatched. Thank you for your order! 😊`;
+      await sendWhatsAppMessage(customerPhone, customerMessage);
+      console.log('✓ WhatsApp confirmation sent to customer');
+    }
+
+  } catch (err) {
+    console.error('Failed to send WhatsApp notification:', err.message);
+    // Don't throw - we don't want WhatsApp failure to break order creation
+  }
+}
+
+// Helper function to send WhatsApp message via Twilio
+async function sendWhatsAppMessage(phoneNumber, message) {
+  try {
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
+    const fromNumber = process.env.TWILIO_WHATSAPP_NUMBER;
+
+    if (!accountSid || !authToken || !fromNumber) {
+      console.warn('Twilio credentials not configured for WhatsApp');
+      return;
+    }
+
+    // Ensure phone number is in E.164 format
+    let formattedPhone = phoneNumber.replace(/\D/g, '');
+    if (!formattedPhone.startsWith('+')) {
+      formattedPhone = '+91' + formattedPhone.slice(-10); // For Indian numbers
+    } else if (!formattedPhone.startsWith('+91') && formattedPhone.length === 10) {
+      formattedPhone = '+91' + formattedPhone;
+    }
+
+    const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + Buffer.from(`${accountSid}:${authToken}`).toString('base64'),
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        'From': `whatsapp:${fromNumber}`,
+        'To': `whatsapp:${formattedPhone}`,
+        'Body': message,
+      }).toString(),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Twilio API error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log('WhatsApp message sent:', data.sid);
+
+  } catch (err) {
+    console.error('WhatsApp send error:', err.message);
+    // Don't throw - graceful failure
+  }
